@@ -10,6 +10,15 @@
     "start": "next start"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.16.4",
+    "@emotion/react": "^11.10.8",
+    "@emotion/styled": "^11.10.8",
+    "@mantine/carousel": "^6.0.9",
+    "@mantine/core": "^6.0.9",
+    "@mantine/form": "^6.0.9",
+    "@mantine/hooks": "^6.0.9",
+    "@mantine/modals": "^6.0.9",
+    "@mantine/notifications": "^6.0.9",
     "@prisma/client": "^4.11.0",
     "@t3-oss/env-nextjs": "^0.2.1",
     "@tanstack/react-query": "^4.28.0",
@@ -17,6 +26,7 @@
     "@trpc/next": "^10.18.0",
     "@trpc/react-query": "^10.18.0",
     "@trpc/server": "^10.18.0",
+    "embla-carousel-react": "^7.1.0",
     "next": "^13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",

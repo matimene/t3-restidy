@@ -1,11 +1,19 @@
-import { createStyles, rem, Loader, Image, Modal } from "@mantine/core";
+import {
+  createStyles,
+  rem,
+  Loader,
+  Image,
+  Modal,
+  Button,
+  Tabs,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { type Item } from "@prisma/client";
-import { api } from "~/utils/api";
+import { Category, type Item } from "@prisma/client";
+import { useState } from "react";
+import { getProductLocaleProps } from "~/utils/helpers";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    backgroundColor: theme.colors.gray[3],
     maxWidth: rem(1024),
     width: "100%",
     display: "flex",
@@ -17,13 +25,12 @@ const useStyles = createStyles((theme) => ({
     borderRadius: theme.radius.sm,
   },
   itemWrapper: {
-    background: "black", // TODO
     padding: theme.spacing.xs,
     height: "min-content",
     width: "100%",
     display: "flex",
     alignItems: "center",
-    borderBottom: "1px dashed rgb(187, 187, 187);",
+    borderBottom: `1px dashed ${theme.colors.gray[7]};`,
   },
   imgWrapper: {
     width: rem(120),
@@ -39,32 +46,27 @@ const useStyles = createStyles((theme) => ({
     color: "white",
   },
   desc: {},
+  actionsContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: theme.spacing.xxs,
+  },
   price: {
     fontSize: 24,
     color: theme.colors.yellow[6],
     textAlign: "right",
-    paddingTop: theme.spacing.xxs,
   },
 }));
-
-type Locales = "En" | "Es";
-
-function getProductLocaleProps(item: Item, rawLocale = "en") {
-  const locale = rawLocale
-    .toLowerCase()
-    .replace(/\w/, (firstLetter) => firstLetter.toUpperCase()) as Locales;
-
-  return {
-    title: item[`title${locale}`] ?? "",
-    description: item[`description${locale}`] ?? "",
-    tags: item[`tags${locale}`] ?? "",
-  };
-}
 
 const Product = (item: Item) => {
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
-  const { title, description } = getProductLocaleProps(item);
+
+  const { title, description } = getProductLocaleProps<Item>({
+    item,
+    keys: ["title", "description"],
+  });
 
   return (
     <>
@@ -90,7 +92,14 @@ const Product = (item: Item) => {
         <div className={classes.dataWrapper}>
           {title && <div className={classes.title}>{title}</div>}
           {description && <div className={classes.desc}>{description}</div>}
-          {item?.price && <div className={classes.price}>€{item?.price}</div>}
+          {item?.price && (
+            <div className={classes.actionsContainer}>
+              <div className={classes.price}>€{item?.price}</div>
+              <Button variant="outline" color="yellow">
+                Add to cart
+              </Button>
+            </div>
+          )}
         </div>
       </div>
       <Modal opened={opened} onClose={close} centered withCloseButton={false}>
@@ -107,17 +116,55 @@ const Product = (item: Item) => {
   );
 };
 
-export const ItemsList = () => {
+type ParsedCategory = {
+  name: string;
+  code: string;
+};
+type ItemsListProps = {
+  items: Item[] | undefined;
+  isLoading: boolean;
+  categories: ParsedCategory[];
+};
+
+export const ItemsList = ({ items, categories, isLoading }: ItemsListProps) => {
   const { classes } = useStyles();
-  const { data: items, isLoading } = api.items.getAll.useQuery();
+  const [activeTabCode, setActiveTabCode] = useState<string>(
+    categories[0]?.code as string
+  );
 
   if (isLoading) return <Loader />;
 
+  const selectedItems = items?.filter((item) => {
+    return item.categoryCodes?.split(";").indexOf(activeTabCode) !== -1;
+  });
+
   return (
-    <div className={classes.container}>
-      {items?.map((item) => (
-        <Product key={item.id} {...item} />
-      ))}
-    </div>
+    <>
+      <Tabs
+        color="yellow"
+        loop
+        defaultValue="gallery"
+        value={activeTabCode}
+        onTabChange={(v) => v && setActiveTabCode(v)}
+        styles={{
+          tabsList: {
+            flexWrap: "nowrap",
+            overflowY: "scroll",
+            overflowX: "visible",
+          },
+        }}
+      >
+        <Tabs.List position="center">
+          {categories?.map((cat) => (
+            <Tabs.Tab value={cat.code}>{cat.name}</Tabs.Tab>
+          ))}
+        </Tabs.List>
+      </Tabs>
+      <div className={classes.container}>
+        {selectedItems?.map((item) => (
+          <Product key={item.id} {...item} />
+        ))}
+      </div>
+    </>
   );
 };

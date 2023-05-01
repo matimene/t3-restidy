@@ -26,10 +26,8 @@ const useStyles = createStyles((theme) => ({
     borderBottom: "1px dashed rgb(187, 187, 187);",
   },
   imgWrapper: {
-    flex: 1,
-    minHeight: rem(120),
-    // height: "-webkit-fill-available",
     width: rem(120),
+    // height: "-webkit-fill-available",
     marginRight: theme.spacing.xs,
   },
   dataWrapper: {
@@ -74,7 +72,12 @@ const Product = (item: Item) => {
         {item.img && (
           <div className={classes.imgWrapper}>
             <Image
-              styles={{ image: { minHeight: 120 } }}
+              styles={{
+                image: {
+                  height: "100%",
+                  minHeight: rem(120),
+                },
+              }}
               miw={120}
               radius="md"
               fit="cover"

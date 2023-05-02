@@ -7,18 +7,15 @@ export const storesRouter = createTRPCRouter({
   loadDataByCode: publicProcedure
     .input(z.object({ code: z.string() }))
     .query(async ({ ctx, input }) => {
-      const store = await ctx.prisma.store.findUnique({
-        where: { code: input.code },
-      });
-
-      if (!store)
+      const storeId = ctx.store?.id;
+      if (!storeId)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Store not found",
         });
 
       const menus = await ctx.prisma.menu.findMany({
-        where: { storeId: store.id },
+        where: { storeId },
       });
       // if (!menus.length)
       //   throw new TRPCError({
@@ -27,7 +24,7 @@ export const storesRouter = createTRPCRouter({
       //   });
 
       const categories = await ctx.prisma.category.findMany({
-        where: { storeId: store.id },
+        where: { storeId },
       });
       if (!categories.length)
         throw new TRPCError({
@@ -35,34 +32,32 @@ export const storesRouter = createTRPCRouter({
           message: "Categories not found",
         });
 
-      return { store, menus, categories };
+      return { menus, categories };
     }),
   loadMenusAndCats: publicProcedure
     .input(z.object({ code: z.string() }))
     .query(async ({ ctx, input }) => {
-      const store = await ctx.prisma.store.findUnique({
-        where: { code: input.code },
-      });
-
-      if (!store)
+      const storeId = ctx.store?.id;
+      if (!storeId)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Store not found",
         });
 
       const menus = await ctx.prisma.menu.findMany({
-        where: { storeId: store.id },
+        where: { storeId },
       });
 
       const categories = await ctx.prisma.category.findMany({
-        where: { storeId: store.id },
+        where: { storeId },
       });
+
       // if (!menus.length)
       //   throw new TRPCError({
       //     code: "INTERNAL_SERVER_ERROR",
       //     message: "Menus not found",
       //   });
 
-      return { store, menus, categories };
+      return { menus, categories };
     }),
 });

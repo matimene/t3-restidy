@@ -30,7 +30,7 @@ const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
   },
   content: {
     maxWidth: rem(1024),
-    marginTop: rem(5),
+    // marginTop: rem(5),
     width: "100%",
     flex: 1,
     display: "flex",

@@ -8,11 +8,7 @@ export const itemsRouter = createTRPCRouter({
     .input(z.object({ code: z.string() }))
     .query(async ({ ctx, input }) => {
       const storeId = ctx.store?.id;
-      if (!storeId)
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Store not found",
-        });
+      console.log(storeId);
 
       const items = await ctx.prisma.item.findMany({
         where: { storeId },

@@ -12,17 +12,17 @@ function getProductLocaleProps<T>({
   locale?: string;
   item: T;
   keys: string[];
-}): LooseObject {
+}) {
   const locale = rawLocale
     .toLowerCase()
     .replace(/\w/, (firstLetter) => firstLetter.toUpperCase()) as Locales;
 
-  const locales = {};
+  const locales: LooseObject = {};
+
   keys.forEach((key) => {
-    // @ts-ignore: Unreachable code error
     const localeKey = `${key}${locale}`;
-    // @ts-ignore: Unreachable code error
-    locales[key] = item[localeKey] ?? "";
+    const translation = item[localeKey as keyof T] ?? "";
+    locales[key] = translation;
   });
 
   return locales;

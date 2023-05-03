@@ -6,7 +6,7 @@ import { ItemsList } from "~/components/ItemsList";
 import { PageLayout } from "~/components/Layout";
 import { api } from "~/utils/api";
 import { getProductLocaleProps } from "~/utils/helpers";
-import { Category } from "@prisma/client";
+import { type Category } from "@prisma/client";
 
 const OrderMenuPage: NextPage<{ code: string }> = ({ code: storeCode }) => {
   const { data: storeData, isLoading: storeLoading } =
@@ -25,14 +25,13 @@ const OrderMenuPage: NextPage<{ code: string }> = ({ code: storeCode }) => {
   const { categories: cats } = storeData;
 
   const categories = cats.map((item: Category) => {
-    const { name } = getProductLocaleProps({
+    const translations = getProductLocaleProps({
       item,
       keys: ["name"],
     });
-    return { code: item.code, name };
-  });
 
-  console.log(categories);
+    return { code: item.code, name: translations.name as string };
+  });
 
   return (
     <>

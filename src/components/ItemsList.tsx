@@ -122,8 +122,8 @@ type ParsedCategory = {
 };
 type ItemsListProps = {
   items: Item[] | undefined;
-  isLoading: boolean;
   categories: ParsedCategory[];
+  isLoading: boolean;
 };
 
 export const ItemsList = ({ items, categories, isLoading }: ItemsListProps) => {
@@ -156,7 +156,9 @@ export const ItemsList = ({ items, categories, isLoading }: ItemsListProps) => {
       >
         <Tabs.List position="center">
           {categories?.map((cat) => (
-            <Tabs.Tab value={cat.code}>{cat.name}</Tabs.Tab>
+            <Tabs.Tab key={cat.code} value={cat.code}>
+              {cat.name}
+            </Tabs.Tab>
           ))}
         </Tabs.List>
       </Tabs>

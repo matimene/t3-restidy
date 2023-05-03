@@ -36,6 +36,7 @@ model Category {
   id    Int      @id @default(autoincrement())
   storeId Int
   code  String   @unique
+  order Int      @default(0)
   parentId Int?
   nameEn String? @db.VarChar(255)
   nameEs String? @db.VarChar(255)
@@ -48,7 +49,7 @@ model Item {
   storeId Int
   sku String             @unique
   active Boolean         @default(true)
-  price Float?           @db.Float
+  price Float            @db.Float
   img String?            @db.VarChar(255)
   categoryCodes  String? @db.VarChar(255)
   descriptionEn  String? @db.VarChar(255)

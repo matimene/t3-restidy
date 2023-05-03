@@ -30,11 +30,14 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const user = sesh.user;
 
   const code = req?.headers?.host?.split(".")[0];
+  let store;
+  if (code) {
+    store = await prisma.store.findUniqueOrThrow({
+      where: { code },
+    });
+  }
 
-  const store = await prisma.store.findUnique({
-    where: { code },
-  });
-
+  console.log(store);
   return {
     prisma,
     currentUser: user,
@@ -53,6 +56,7 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { getAuth } from "@clerk/nextjs/server";
+import console from "console";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,

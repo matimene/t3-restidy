@@ -11,6 +11,8 @@ import { useDisclosure } from "@mantine/hooks";
 import { Category, type Item } from "@prisma/client";
 import { useState } from "react";
 import { getProductLocaleProps } from "~/utils/helpers";
+import { CartFooter } from "./CartFooter";
+import { Centered } from "./Primary";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -59,7 +61,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const Product = (item: Item) => {
+const Product = ({
+  item,
+  onAddToCart,
+}: {
+  item: Item;
+  onAddToCart?: (cartItem: any) => void;
+}) => {
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -67,6 +75,14 @@ const Product = (item: Item) => {
     item,
     keys: ["title", "description"],
   });
+
+  const handleAdd = () => {
+    const cartItem = {
+      itemId: item.id,
+      qty: 1,
+    };
+    onAddToCart && onAddToCart(cartItem);
+  };
 
   return (
     <>
@@ -95,9 +111,11 @@ const Product = (item: Item) => {
           {item?.price && (
             <div className={classes.actionsContainer}>
               <div className={classes.price}>€{item?.price}</div>
-              <Button variant="outline" color="yellow">
-                Add to cart
-              </Button>
+              {onAddToCart && (
+                <Button variant="outline" color="yellow" onClick={handleAdd}>
+                  Add to cart
+                </Button>
+              )}
             </div>
           )}
         </div>
@@ -120,19 +138,50 @@ type ParsedCategory = {
   name: string;
   code: string;
 };
+type CartItem = {
+  itemId: number;
+  qty: number;
+  notes?: string;
+};
 type ItemsListProps = {
   items: Item[] | undefined;
   categories: ParsedCategory[];
   isLoading: boolean;
+  noActions?: boolean;
 };
 
-export const ItemsList = ({ items, categories, isLoading }: ItemsListProps) => {
+export const ItemsList = ({
+  items,
+  categories,
+  isLoading,
+  noActions,
+}: ItemsListProps) => {
   const { classes } = useStyles();
   const [activeTabCode, setActiveTabCode] = useState<string>(
     categories[0]?.code as string
   );
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  if (isLoading) return <Loader />;
+  const handleEditToCart = (updatedCartItem: CartItem) => {
+    const { itemId, qty: newQty } = updatedCartItem;
+
+    setCartItems((curr) => {
+      const isInCart = curr.find((item) => item.itemId === itemId);
+      const updatedCart = isInCart
+        ? cartItems.map((item) =>
+            item.itemId === itemId ? { ...item, qty: newQty } : item
+          )
+        : [...curr, updatedCartItem];
+      return updatedCart;
+    });
+  };
+
+  if (isLoading)
+    return (
+      <Centered>
+        <Loader />
+      </Centered>
+    );
 
   const selectedItems = items?.filter((item) => {
     return item.categoryCodes?.split(";").indexOf(activeTabCode) !== -1;
@@ -149,8 +198,8 @@ export const ItemsList = ({ items, categories, isLoading }: ItemsListProps) => {
         styles={{
           tabsList: {
             flexWrap: "nowrap",
-            overflowY: "scroll",
-            overflowX: "visible",
+            overflowX: "scroll",
+            overflowY: "clip",
           },
         }}
       >
@@ -164,9 +213,14 @@ export const ItemsList = ({ items, categories, isLoading }: ItemsListProps) => {
       </Tabs>
       <div className={classes.container}>
         {selectedItems?.map((item) => (
-          <Product key={item.id} {...item} />
+          <Product
+            key={item.id}
+            item={item}
+            onAddToCart={noActions ? undefined : handleEditToCart}
+          />
         ))}
       </div>
+      <CartFooter items={cartItems} />
     </>
   );
 };

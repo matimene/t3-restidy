@@ -29,8 +29,9 @@ const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
     height: rem(48),
   },
   content: {
+    position: "relative",
     maxWidth: rem(1024),
-    // marginTop: rem(5),
+    paddingTop: rem(24),
     width: "100%",
     flex: 1,
     display: "flex",

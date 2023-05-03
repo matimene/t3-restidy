@@ -1,14 +1,37 @@
+import { useState } from "react";
+import { Loader, Tabs } from "@mantine/core";
 import { type NextPage } from "next";
 import Head from "next/head";
 import { ItemsList } from "~/components/ItemsList";
 import { PageLayout } from "~/components/Layout";
 import { api } from "~/utils/api";
+import { getProductLocaleProps } from "~/utils/helpers";
+import { type Category } from "@prisma/client";
 
-const MenuPage: NextPage<{ storeCode: string }> = ({ storeCode: code }) => {
-  api.stores.loadDataByCode.useQuery({ code });
-  const { data: items, isLoading } = api.items.getAll.useQuery({ code });
+const OrderMenuPage: NextPage<{ code: string }> = ({ code: storeCode }) => {
+  const { data: storeData, isLoading: storeLoading } =
+    api.stores.loadDataByCode.useQuery({
+      code: storeCode,
+    });
+  const { data: items, isLoading } = api.items.getAll.useQuery({
+    code: storeCode,
+  });
+  const [activeTabCode, setActiveTabCode] = useState<string | null>(null);
 
-  console.log({ code });
+  if (storeLoading) return <Loader />;
+  if (!items || !storeData || !storeData.categories)
+    return <div>Something went wrong</div>;
+
+  const { categories: cats } = storeData;
+
+  const categories = cats.map((item: Category) => {
+    const translations = getProductLocaleProps({
+      item,
+      keys: ["name"],
+    });
+
+    return { code: item.code, name: translations.name as string };
+  });
 
   return (
     <>
@@ -18,21 +41,24 @@ const MenuPage: NextPage<{ storeCode: string }> = ({ storeCode: code }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
-        <ItemsList items={items} isLoading={isLoading} />
+        <ItemsList
+          categories={categories}
+          items={items}
+          isLoading={isLoading}
+        />
       </PageLayout>
     </>
   );
 };
 
-MenuPage.getInitialProps = ({ req }) => {
+OrderMenuPage.getInitialProps = ({ req }) => {
   // // FOR WHEN NEEDED ONLY ON CLIENT SIDE
-  // const storeCode = window.location.host.split(".")[0] as string;
+  // const code = window.location.host.split(".")[0] as string;
   // FOR WHEN THEY'RE NEEDED AT SERVER SIDE
-  const storeCode = req?.headers?.host?.split(".")[0] as string;
+  const code = req?.headers?.host?.split(".")[0] as string;
+  if (typeof code !== "string") throw new Error("No store found");
 
-  if (typeof storeCode !== "string") throw new Error("No store found");
-
-  return { storeCode };
+  return { code };
 };
 
-export default MenuPage;
+export default OrderMenuPage;

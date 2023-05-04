@@ -1,12 +1,12 @@
 import { Loader } from "@mantine/core";
 import { type NextPage } from "next";
 import Head from "next/head";
-import { ItemsList } from "~/components/ItemsList";
+import { ItemsList } from "~/components/Menu/ItemsList";
 import { PageLayout } from "~/components/Layout";
 import { api } from "~/utils/api";
 import { getProductLocaleProps } from "~/utils/helpers";
 import { type Category } from "@prisma/client";
-import { Centered } from "~/components/Primary";
+import { Centered } from "~/components/Primary/LoadingSpinner";
 
 const OrderMenuPage: NextPage<{ code: string }> = ({ code: storeCode }) => {
   const { data: storeData, isLoading: storeLoading } =

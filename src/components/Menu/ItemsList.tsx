@@ -4,8 +4,9 @@ import { type Item } from "@prisma/client";
 import { useState } from "react";
 import { getProductLocaleProps } from "~/utils/helpers";
 import { CartFooter } from "./CartFooter";
-import { Loading } from "./Primary";
+import { Loading } from "../Primary/LoadingSpinner";
 import styled from "@emotion/styled";
+import NumericInput from "../Primary/NumericInput";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -68,7 +69,9 @@ const StyledTabs = styled(Tabs)`
 const Product = ({
   item,
   onAddToCart,
+  itemInCart,
 }: {
+  itemInCart: CartItem | undefined;
   item: Item;
   onAddToCart?: (cartItem: any) => void;
 }) => {
@@ -80,10 +83,11 @@ const Product = ({
     keys: ["title", "description"],
   });
 
-  const handleAdd = () => {
+  const handleEditCart = ({ qty, notes }: { qty: number; notes?: string }) => {
     const cartItem = {
       itemId: item.id,
-      qty: 1,
+      qty,
+      notes,
     };
     onAddToCart && onAddToCart(cartItem);
   };
@@ -116,15 +120,34 @@ const Product = ({
             <div className={classes.actionsContainer}>
               <div className={classes.price}>€{item?.price}</div>
               {onAddToCart && (
-                <Button variant="outline" color="yellow" onClick={handleAdd}>
-                  Add to cart
-                </Button>
+                <>
+                  {!!itemInCart ? (
+                    <NumericInput
+                      value={itemInCart.qty}
+                      setValue={(qty) => handleEditCart({ qty })}
+                    />
+                  ) : (
+                    <Button
+                      variant="outline"
+                      color="yellow"
+                      onClick={() => handleEditCart({ qty: 1 })}
+                    >
+                      Add to cart
+                    </Button>
+                  )}
+                </>
               )}
             </div>
           )}
         </div>
       </div>
-      <Modal opened={opened} onClose={close} centered withCloseButton={false}>
+      <Modal
+        padding="6px"
+        opened={opened}
+        onClose={close}
+        centered
+        withCloseButton={false}
+      >
         <Image
           width="100%"
           radius="md"
@@ -148,7 +171,7 @@ type CartItem = {
   notes?: string;
 };
 type ItemsListProps = {
-  items: Item[] | undefined;
+  items: Item[];
   categories: ParsedCategory[];
   isLoading: boolean;
   noActions?: boolean;
@@ -166,14 +189,17 @@ export const ItemsList = ({
   );
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  const handleEditToCart = (updatedCartItem: CartItem) => {
+  const handleEditCartItem = (updatedCartItem: CartItem) => {
     const { itemId, qty: newQty } = updatedCartItem;
 
     setCartItems((curr) => {
-      const isInCart = curr.find((item) => item.itemId === itemId);
+      if (newQty === 0)
+        return cartItems.filter((item) => item.itemId !== itemId);
+
+      const isInCart = !!curr.find((item) => item.itemId === itemId);
       const updatedCart = isInCart
         ? cartItems.map((item) =>
-            item.itemId === itemId ? { ...item, qty: newQty } : item
+            item.itemId === itemId ? updatedCartItem : item
           )
         : [...curr, updatedCartItem];
       return updatedCart;
@@ -217,11 +243,16 @@ export const ItemsList = ({
           <Product
             key={item.id}
             item={item}
-            onAddToCart={noActions ? undefined : handleEditToCart}
+            itemInCart={cartItems?.find((cItem) => cItem.itemId === item.id)}
+            onAddToCart={noActions ? undefined : handleEditCartItem}
           />
         ))}
       </div>
-      <CartFooter items={cartItems} />
+      <CartFooter
+        cartItems={cartItems}
+        items={items}
+        onEditCartItem={handleEditCartItem}
+      />
     </>
   );
 };

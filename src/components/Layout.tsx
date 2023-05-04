@@ -2,7 +2,6 @@ import type { PropsWithChildren } from "react";
 import { createStyles, rem } from "@mantine/core";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import useIntervalPicker from "~/utils/hooks/useIntervalPicker";
-import { useRouter } from "next/router";
 
 interface LayoutProps {
   bgUrl: string;
@@ -19,7 +18,9 @@ const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
     width: "100%",
     marginLeft: "auto",
     marginRight: "auto",
-    minHeight: "100vh",
+    // minHeight: "100vh",
+    position: "fixed",
+    height: "100%",
   },
   nav: {
     backgroundColor: theme.colors.gray[5],

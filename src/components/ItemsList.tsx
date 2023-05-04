@@ -1,18 +1,11 @@
-import {
-  createStyles,
-  rem,
-  Loader,
-  Image,
-  Modal,
-  Button,
-  Tabs,
-} from "@mantine/core";
+import { createStyles, rem, Image, Modal, Button, Tabs } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Category, type Item } from "@prisma/client";
+import { type Item } from "@prisma/client";
 import { useState } from "react";
 import { getProductLocaleProps } from "~/utils/helpers";
 import { CartFooter } from "./CartFooter";
-import { Centered } from "./Primary";
+import { Loading } from "./Primary";
+import styled from "@emotion/styled";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -36,7 +29,6 @@ const useStyles = createStyles((theme) => ({
   },
   imgWrapper: {
     width: rem(120),
-    // height: "-webkit-fill-available",
     marginRight: theme.spacing.xs,
   },
   dataWrapper: {
@@ -60,6 +52,18 @@ const useStyles = createStyles((theme) => ({
     textAlign: "right",
   },
 }));
+
+const StyledTabs = styled(Tabs)`
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  & .mantine-Tabs-tabsList::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & .mantine-Tabs-tabsList {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+`;
 
 const Product = ({
   item,
@@ -176,12 +180,7 @@ export const ItemsList = ({
     });
   };
 
-  if (isLoading)
-    return (
-      <Centered>
-        <Loader />
-      </Centered>
-    );
+  if (isLoading) return <Loading />;
 
   const selectedItems = items?.filter((item) => {
     return item.categoryCodes?.split(";").indexOf(activeTabCode) !== -1;
@@ -189,18 +188,20 @@ export const ItemsList = ({
 
   return (
     <>
-      <Tabs
+      <StyledTabs
         color="yellow"
         loop
-        defaultValue="gallery"
         value={activeTabCode}
         onTabChange={(v) => v && setActiveTabCode(v)}
         styles={{
           tabsList: {
             flexWrap: "nowrap",
             overflowX: "scroll",
-            overflowY: "clip",
+            minHeight: rem(44),
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
           },
+          tab: { maxHeight: rem(42) },
         }}
       >
         <Tabs.List position="center">
@@ -210,7 +211,7 @@ export const ItemsList = ({
             </Tabs.Tab>
           ))}
         </Tabs.List>
-      </Tabs>
+      </StyledTabs>
       <div className={classes.container}>
         {selectedItems?.map((item) => (
           <Product

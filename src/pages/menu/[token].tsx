@@ -12,7 +12,7 @@ const OrderMenuPage: NextPage<{ code: string }> = ({ code: storeCode }) => {
   const { data: storeData, isLoading: storeLoading } =
     api.stores.loadDataByCode.useQuery({
       code: storeCode,
-    });
+    }); // TODO?: pass it to trcp
   const { data: items, isLoading } = api.items.getAll.useQuery({
     code: storeCode,
   });

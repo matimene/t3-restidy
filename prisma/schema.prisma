@@ -108,7 +108,7 @@ model Table {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  @@index([storeId])
+  @@index([storeId, token])
 }
 
 model PhysicalTable {
@@ -125,6 +125,8 @@ model Store {
   name String?    @db.VarChar(255)
   code  String    @unique @db.VarChar(50)
   active Boolean  @default(true)
+
+  @@index([code])
 }
 
 enum Role {

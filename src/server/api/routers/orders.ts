@@ -4,10 +4,9 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 const OrderItemModel = z.object({
-  storeId: z.number(),
   itemId: z.number(),
   qty: z.number(),
-  notes: z.string(),
+  notes: z.string().optional(),
 });
 
 export const ordersRouter = createTRPCRouter({
@@ -18,26 +17,24 @@ export const ordersRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({
-        code: z.string().min(5),
+        token: z.string().min(5),
         items: z.array(OrderItemModel),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const storeId = ctx.store?.id;
-      if (!storeId)
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Not found",
-        });
+      const storeId = ctx.store?.id as number;
 
-      const table = await ctx.prisma.table.findUniqueOrThrow({
-        where: { token: input.code },
+      const table = await ctx.prisma.table.findFirstOrThrow({
+        where: {
+          token: input.token,
+          storeId,
+        },
       });
 
       const order = await ctx.prisma.order.create({
         data: {
           storeId,
-          tableId: table.id,
+          tableId: table?.id,
         },
       });
 

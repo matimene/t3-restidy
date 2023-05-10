@@ -13,7 +13,7 @@ export const Centered = styled.div`
   align-items: center;
 `;
 
-export const Loading = () => {
+export const LoadingSpinner = () => {
   return (
     <Centered>
       <Loader />

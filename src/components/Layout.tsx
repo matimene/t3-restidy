@@ -9,6 +9,7 @@ interface LayoutProps {
 
 const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
   main: {
+    position: "relative",
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${bgUrl})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
@@ -20,7 +21,6 @@ const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
     marginRight: "auto",
     height: "100vh",
     maxHeight: "-webkit-fill-available",
-    position: "relative",
   },
   nav: {
     backgroundColor: theme.colors.gray[5],
@@ -30,11 +30,11 @@ const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
     height: rem(48),
   },
   content: {
-    position: "relative",
     maxWidth: rem(1024),
-    paddingTop: rem(24),
     width: "100%",
-    flex: 1,
+    height: "100%",
+    paddingTop: rem(24),
+    paddingBottom: rem(24),
     display: "flex",
     justifyContent: "center",
     marginLeft: "auto",

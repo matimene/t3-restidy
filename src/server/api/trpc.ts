@@ -37,10 +37,9 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
     });
   }
 
-  console.log(store);
   return {
-    prisma,
     currentUser: user,
+    prisma,
     store,
   };
 };

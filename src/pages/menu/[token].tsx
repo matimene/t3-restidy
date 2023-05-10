@@ -1,5 +1,5 @@
 import { Loader } from "@mantine/core";
-import { type NextPage } from "next";
+import { type GetStaticProps, type NextPage } from "next";
 import Head from "next/head";
 import { ItemsList } from "~/components/Menu/ItemsList";
 import { PageLayout } from "~/components/Layout";
@@ -8,14 +8,10 @@ import { getProductLocaleProps } from "~/utils/helpers";
 import { type Category } from "@prisma/client";
 import { Centered } from "~/components/Primary/LoadingSpinner";
 
-const OrderMenuPage: NextPage<{ code: string }> = ({ code: storeCode }) => {
+const MenuPage: NextPage = ({ token }: { token?: string }) => {
   const { data: storeData, isLoading: storeLoading } =
-    api.stores.loadDataByCode.useQuery({
-      code: storeCode,
-    }); // TODO?: pass it to trcp
-  const { data: items, isLoading } = api.items.getAll.useQuery({
-    code: storeCode,
-  });
+    api.stores.loadDataByCode.useQuery();
+  const { data: items, isLoading } = api.items.getAll.useQuery();
 
   if (storeLoading)
     return (
@@ -50,20 +46,29 @@ const OrderMenuPage: NextPage<{ code: string }> = ({ code: storeCode }) => {
           categories={categories}
           items={items}
           isLoading={isLoading}
+          token={token}
         />
       </PageLayout>
     </>
   );
 };
 
-OrderMenuPage.getInitialProps = ({ req }) => {
-  // // FOR WHEN NEEDED ONLY ON CLIENT SIDE
-  // const code = window.location.host.split(".")[0] as string;
-  // FOR WHEN THEY'RE NEEDED AT SERVER SIDE
-  const code = req?.headers?.host?.split(".")[0] as string;
-  if (typeof code !== "string") throw new Error("No store found");
+export function getStaticPaths() {
+  return {
+    paths: [],
+    // Enable statically generating additional pages
+    // For example: `/posts/3`
+    fallback: true,
+  };
+}
 
-  return { code };
+export const getStaticProps: GetStaticProps = (context) => {
+  const token = context.params?.token as string;
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
-export default OrderMenuPage;
+export default MenuPage;

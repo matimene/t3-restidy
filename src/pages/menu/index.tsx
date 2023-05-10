@@ -10,12 +10,8 @@ import { Centered } from "~/components/Primary/LoadingSpinner";
 
 const OrderMenuPage: NextPage<{ code: string }> = ({ code: storeCode }) => {
   const { data: storeData, isLoading: storeLoading } =
-    api.stores.loadDataByCode.useQuery({
-      code: storeCode,
-    });
-  const { data: items, isLoading } = api.items.getAll.useQuery({
-    code: storeCode,
-  });
+    api.stores.loadDataByCode.useQuery();
+  const { data: items, isLoading } = api.items.getAll.useQuery();
 
   if (storeLoading)
     return (

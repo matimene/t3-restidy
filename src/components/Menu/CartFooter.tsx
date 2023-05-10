@@ -1,6 +1,14 @@
-import { Input, Modal, createStyles, rem } from "@mantine/core";
+import {
+  Button,
+  Input,
+  LoadingOverlay,
+  Modal,
+  createStyles,
+  rem,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { type Item } from "@prisma/client";
+import { api } from "~/utils/api";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -27,6 +35,11 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  actionsContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: rem(24),
+  },
 }));
 
 type CartItem = {
@@ -39,23 +52,45 @@ export const CartFooter = ({
   items,
   cartItems,
   onEditCartItem,
+  token,
+  onCleanCart,
 }: {
   items: Item[];
   cartItems: CartItem[];
   onEditCartItem: (item: CartItem) => void;
+  token?: string;
+  onCleanCart: () => void;
 }) => {
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
+  const { mutate: createOrder, isLoading } = api.orders.create.useMutation({
+    onSuccess: () => {
+      onCleanCart();
+      close();
+      window.alert("order created");
+    },
+    onError: (e) => {
+      const errorMessage = e.data?.zodError;
+      console.log(errorMessage);
+    },
+  });
 
   const handleShowModal = () => {
-    if (!items.length) return;
-    open();
+    if (cartItems.length) open();
+  };
+  const handlePlaceOrder = () => {
+    if (token) {
+      createOrder({
+        items: cartItems,
+        token,
+      });
+    }
   };
 
   return (
     <>
       <div className={classes.container} onClick={handleShowModal}>
-        {cartItems?.length ? `Place order (${cartItems.length})` : "Cart empty"}
+        {cartItems?.length ? `Continue (${cartItems.length})` : "Cart empty"}
       </div>
       <Modal
         padding="6px"
@@ -64,6 +99,7 @@ export const CartFooter = ({
         centered
         withCloseButton={false}
       >
+        <LoadingOverlay visible={isLoading} />
         {cartItems.map((cItem) => {
           const item = items.find((i) => i.id === cItem.itemId);
           return (
@@ -81,6 +117,23 @@ export const CartFooter = ({
             </div>
           );
         })}
+        <div className={classes.actionsContainer}>
+          <Button
+            styles={(theme) => ({
+              label: {
+                color: theme.colors.gray[9],
+              },
+            })}
+            color="yellow"
+            size="xs"
+            onClick={close}
+          >
+            Cancel
+          </Button>
+          <Button variant="outline" color="yellow" onClick={handlePlaceOrder}>
+            Place order
+          </Button>
+        </div>
       </Modal>
     </>
   );

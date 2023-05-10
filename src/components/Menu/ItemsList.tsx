@@ -4,25 +4,31 @@ import { type Item } from "@prisma/client";
 import { useState } from "react";
 import { getProductLocaleProps } from "~/utils/helpers";
 import { CartFooter } from "./CartFooter";
-import { Loading } from "../Primary/LoadingSpinner";
+import { LoadingSpinner } from "../Primary/LoadingSpinner";
 import styled from "@emotion/styled";
 import NumericInput from "../Primary/NumericInput";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    paddingBottom: rem(48 + 12),
-    flex: 1,
+    height: "100%",
   },
   itemsContainer: {
     maxWidth: rem(1024),
     width: "100%",
     display: "flex",
+    flex: "1 1 auto",
     flexDirection: "column",
     justifyContent: "start",
-    flex: 1,
+    height: "100%",
     marginLeft: "auto",
     marginRight: "auto",
     borderRadius: theme.radius.sm,
+  },
+  itemActionsContainer: {
+    maxHeight: rem(36),
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   itemWrapper: {
     padding: theme.spacing.xs,
@@ -124,7 +130,7 @@ const Product = ({
             <div className={classes.actionsitemsContainer}>
               <div className={classes.price}>€{item?.price}</div>
               {onAddToCart && (
-                <div>
+                <div className={classes.itemActionsContainer}>
                   {!!itemInCart ? (
                     <NumericInput
                       value={itemInCart.qty}
@@ -179,9 +185,11 @@ type ItemsListProps = {
   categories: ParsedCategory[];
   isLoading: boolean;
   noActions?: boolean;
+  token?: string;
 };
 
 export const ItemsList = ({
+  token,
   items,
   categories,
   isLoading,
@@ -210,7 +218,7 @@ export const ItemsList = ({
     });
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <LoadingSpinner />;
 
   const selectedItems = items?.filter((item) => {
     return item.categoryCodes?.split(";").indexOf(activeTabCode) !== -1;
@@ -256,6 +264,8 @@ export const ItemsList = ({
         cartItems={cartItems}
         items={items}
         onEditCartItem={handleEditCartItem}
+        token={token}
+        onCleanCart={() => setCartItems([])}
       />
     </div>
   );

@@ -4,34 +4,32 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const storesRouter = createTRPCRouter({
-  loadDataByCode: publicProcedure
-    .input(z.object({ code: z.string() }))
-    .query(async ({ ctx }) => {
-      const storeId = ctx.store?.id;
+  loadDataByCode: publicProcedure.query(async ({ ctx }) => {
+    const storeId = ctx.store?.id;
 
-      const menus = await ctx.prisma.menu.findMany({
+    const menus = await ctx.prisma.menu.findMany({
+      where: { storeId },
+    });
+    // if (!menus.length)
+    //   throw new TRPCError({
+    //     code: "INTERNAL_SERVER_ERROR",
+    //     message: "Menus not found",
+    //   });
+
+    const categories = (
+      await ctx.prisma.category.findMany({
         where: { storeId },
+      })
+    ).sort((a, b) => a.order - b.order);
+
+    if (!categories.length)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Categories not found",
       });
-      // if (!menus.length)
-      //   throw new TRPCError({
-      //     code: "INTERNAL_SERVER_ERROR",
-      //     message: "Menus not found",
-      //   });
 
-      const categories = (
-        await ctx.prisma.category.findMany({
-          where: { storeId },
-        })
-      ).sort((a, b) => a.order - b.order);
-
-      if (!categories.length)
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Categories not found",
-        });
-
-      return { menus, categories };
-    }),
+    return { menus, categories };
+  }),
   loadMenusAndCats: publicProcedure
     .input(z.object({ code: z.string() }))
     .query(async ({ ctx, input }) => {

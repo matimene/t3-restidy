@@ -14,6 +14,8 @@ const useStyles = createStyles((theme) => ({
     fontSize: theme.fontSizes.lg,
     textTransform: "uppercase",
     fontWeight: "bold",
+    position: "fixed",
+    bottom: 0,
   },
   itemContainer: {
     paddingBottom: rem(12),

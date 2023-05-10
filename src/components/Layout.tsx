@@ -18,7 +18,9 @@ const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
     width: "100%",
     marginLeft: "auto",
     marginRight: "auto",
-    minHeight: "100vh",
+    height: "100vh",
+    maxHeight: "-webkit-fill-available",
+    position: "relative",
   },
   nav: {
     backgroundColor: theme.colors.gray[5],

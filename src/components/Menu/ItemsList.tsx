@@ -10,6 +10,10 @@ import NumericInput from "../Primary/NumericInput";
 
 const useStyles = createStyles((theme) => ({
   container: {
+    paddingBottom: rem(48 + 12),
+    flex: 1,
+  },
+  itemsContainer: {
     maxWidth: rem(1024),
     width: "100%",
     display: "flex",
@@ -41,7 +45,7 @@ const useStyles = createStyles((theme) => ({
     color: "white",
   },
   desc: {},
-  actionsContainer: {
+  actionsitemsContainer: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -117,7 +121,7 @@ const Product = ({
           {title && <div className={classes.title}>{title}</div>}
           {description && <div className={classes.desc}>{description}</div>}
           {item?.price && (
-            <div className={classes.actionsContainer}>
+            <div className={classes.actionsitemsContainer}>
               <div className={classes.price}>€{item?.price}</div>
               {onAddToCart && (
                 <div>
@@ -213,7 +217,7 @@ export const ItemsList = ({
   });
 
   return (
-    <>
+    <div className={classes.container}>
       <StyledTabs
         color="yellow"
         loop
@@ -238,7 +242,7 @@ export const ItemsList = ({
           ))}
         </Tabs.List>
       </StyledTabs>
-      <div className={classes.container}>
+      <div className={classes.itemsContainer}>
         {selectedItems?.map((item) => (
           <Product
             key={item.id}
@@ -253,6 +257,6 @@ export const ItemsList = ({
         items={items}
         onEditCartItem={handleEditCartItem}
       />
-    </>
+    </div>
   );
 };

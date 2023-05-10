@@ -120,7 +120,7 @@ const Product = ({
             <div className={classes.actionsContainer}>
               <div className={classes.price}>€{item?.price}</div>
               {onAddToCart && (
-                <>
+                <div>
                   {!!itemInCart ? (
                     <NumericInput
                       value={itemInCart.qty}
@@ -135,7 +135,7 @@ const Product = ({
                       Add to cart
                     </Button>
                   )}
-                </>
+                </div>
               )}
             </div>
           )}

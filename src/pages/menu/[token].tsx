@@ -64,6 +64,7 @@ export function getStaticPaths() {
 
 export const getStaticProps: GetStaticProps = (context) => {
   const token = context.params?.token as string;
+
   return {
     props: {
       token,

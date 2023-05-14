@@ -1,4 +1,6 @@
-import { createStyles, rem } from "@mantine/core";
+import { createStyles } from "@mantine/core";
+import { api } from "~/utils/api";
+import { LoadingSpinner } from "../Primary/LoadingSpinner";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -13,5 +15,11 @@ const useStyles = createStyles((theme) => ({
 
 export const Dashboard = () => {
   const { classes } = useStyles();
-  return <div className={classes.container}>content</div>;
+  const { data: storeData, isLoading: storeLoading } =
+    api.stores.loadDataByCode.useQuery();
+  const { data: items, isLoading } = api.items.getAll.useQuery();
+
+  if (storeLoading || isLoading) if (isLoading) return <LoadingSpinner />;
+
+  return <div className={classes.container}>Admin dashboard</div>;
 };

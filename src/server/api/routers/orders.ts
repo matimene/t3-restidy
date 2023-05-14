@@ -1,24 +1,42 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-const OrderItemModel = z.object({
+const NewOrderItem = z.object({
   itemId: z.number(),
   qty: z.number(),
   notes: z.string().optional(),
 });
 
 export const ordersRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.order.findMany();
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.order.findMany({
+      include: {
+        items: {
+          include: {
+            item: {
+              select: {
+                titleEn: true,
+                titleEs: true,
+                sku: true,
+              },
+            },
+          },
+        },
+        table: {
+          include: {
+            pTable: true,
+          },
+        },
+      },
+    });
   }),
 
   create: publicProcedure
     .input(
       z.object({
         token: z.string().min(5),
-        items: z.array(OrderItemModel),
+        items: z.array(NewOrderItem),
       })
     )
     .mutation(async ({ ctx, input }) => {

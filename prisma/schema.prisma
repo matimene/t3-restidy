@@ -11,120 +11,129 @@ generator client {
 }
 
 model Menu {
-  id    Int             @id @default(autoincrement())
-  storeId Int
-  active Boolean        @default(true)
+  id       Int            @id @default(autoincrement())
+  storeId  Int
+  active   Boolean        @default(true)
   sections MenuSections[]
 
   @@index([storeId])
 }
 
 model MenuSections {
-  id    Int       @id @default(autoincrement())
-  menu   Menu     @relation(fields: [menuId], references: [id])
-  menuId Int      
-  order Int       @default(0)
-  img String?     @db.VarChar(255)
-  nameEn String?  @db.VarChar(255)
-  nameEs String?  @db.VarChar(255)
+  id      Int     @id @default(autoincrement())
+  menu    Menu    @relation(fields: [menuId], references: [id])
+  menuId  Int
+  order   Int     @default(0)
+  img     String? @db.VarChar(255)
+  nameEn  String? @db.VarChar(255)
+  nameEs  String? @db.VarChar(255)
   itemIds String? @db.VarChar(500)
 
   @@index([menuId])
 }
 
 model Category {
-  id    Int      @id @default(autoincrement())
-  storeId Int
-  code  String   @unique
-  order Int      @default(0)
+  id       Int     @id @default(autoincrement())
+  storeId  Int
+  code     String  @unique
+  order    Int     @default(0)
   parentId Int?
-  nameEn String? @db.VarChar(255)
-  nameEs String? @db.VarChar(255)
+  nameEn   String? @db.VarChar(255)
+  nameEs   String? @db.VarChar(255)
 
   @@index([storeId])
 }
 
 model Item {
-  id    Int              @id @default(autoincrement())
-  storeId Int
-  sku String             @unique
-  active Boolean         @default(true)
-  price Float            @db.Float
-  img String?            @db.VarChar(255)
-  categoryCodes  String? @db.VarChar(255)
-  descriptionEn  String? @db.VarChar(255)
-  descriptionEs  String? @db.VarChar(255)
-  tagsEn  String?        @db.VarChar(255)
-  tagsEs  String?        @db.VarChar(255)
-  titleEn String?        @db.VarChar(255)
-  titleEs String?        @db.VarChar(255)
-  
+  id            Int         @id @default(autoincrement())
+  storeId       Int
+  sku           String      @unique
+  active        Boolean     @default(true)
+  price         Float       @db.Float
+  img           String?     @db.VarChar(255)
+  categoryCodes String?     @db.VarChar(255)
+  descriptionEn String?     @db.VarChar(255)
+  descriptionEs String?     @db.VarChar(255)
+  tagsEn        String?     @db.VarChar(255)
+  tagsEs        String?     @db.VarChar(255)
+  titleEn       String?     @db.VarChar(255)
+  titleEs       String?     @db.VarChar(255)
+  OrderItem     OrderItem[]
+
   @@index([storeId])
 }
 
 model Order {
-  id    Int          @id @default(autoincrement())
-  storeId Int
-  tableId Int
-  status OrderStatus @default(PENDING)
-  items OrderItem[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int         @id @default(autoincrement())
+  storeId   Int
+  tableId   Int
+  status    OrderStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  items     OrderItem[]
+  table     Table       @relation(fields: [tableId], references: [id])
 
   @@index([storeId])
+  @@index([tableId])
 }
 
 model OrderItem {
-  id    Int       @id @default(autoincrement())
-  order Order     @relation(fields: [orderId], references: [id])
+  id      Int     @id @default(autoincrement())
+  order   Order   @relation(fields: [orderId], references: [id])
   orderId Int
-  itemId Int
-  qty Int         @default(1)
-  price Float     @db.Float
-  notes String?   @db.VarChar(255)
+  itemId  Int
+  item    Item    @relation(fields: [itemId], references: [id])
+  qty     Int     @default(1)
+  price   Float   @db.Float
+  notes   String? @db.VarChar(255)
   deleted Boolean @default(false)
 
   @@index([orderId])
+  @@index([itemId])
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
+  id      Int     @id @default(autoincrement())
   storeId Int
-  email String  @unique
-  name  String? @db.VarChar(255)
-  role Role     @default(USER)
+  email   String  @unique
+  name    String? @db.VarChar(255)
+  role    Role    @default(USER)
   // posts Post[]
   // store    Store     @relation(fields: [storeId], references: [id])
 }
 
 model Table {
-  id    Int           @id @default(autoincrement())
-  storeId Int  
-  pTableId  Int
-  token String        @unique
-  open Boolean        @default(true)
-  identifier String?  @db.VarChar(255)
-  discount Float      @default(0.00)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         Int           @id @default(autoincrement())
+  storeId    Int
+  pTableId   Int
+  pTable     PhysicalTable @relation(fields: [pTableId], references: [id])
+  token      String        @unique
+  open       Boolean       @default(true)
+  identifier String?       @db.VarChar(255)
+  discount   Float         @default(0.00)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  Order      Order[]
 
   @@index([storeId, token])
+  @@index([pTableId])
 }
 
 model PhysicalTable {
-  id    Int       @id @default(autoincrement())
-  storeId Int  
-  active Boolean  @default(true)
-  name  String    @db.VarChar(255)   
+  id      Int     @id @default(autoincrement())
+  storeId Int
+  active  Boolean @default(true)
+  name    String  @db.VarChar(255)
+  Table   Table[]
 
   @@index([storeId])
 }
 
 model Store {
-  id    Int       @id @default(autoincrement())
-  name String?    @db.VarChar(255)
-  code  String    @unique @db.VarChar(50)
-  active Boolean  @default(true)
+  id     Int     @id @default(autoincrement())
+  name   String? @db.VarChar(255)
+  code   String  @unique @db.VarChar(50)
+  active Boolean @default(true)
 
   @@index([code])
 }

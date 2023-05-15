@@ -67,7 +67,7 @@ model Order {
   id        Int         @id @default(autoincrement())
   storeId   Int
   tableId   Int
-  status    OrderStatus @default(PENDING)
+  status    String      @default("PENDING")
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   items     OrderItem[]
@@ -145,8 +145,3 @@ enum Role {
   SUPERADMIN
 }
 
-enum OrderStatus {
-  PENDING
-  CANCELED
-  COMPLETED
-}

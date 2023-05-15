@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+export const OrderStatuses = {
+  PENDING: "PENDING",
+  PROCESSING: "PROCESSING",
+  CANCELED: "CANCELED",
+  COMPLETED: "COMPLETED",
+};
+
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 const NewOrderItem = z.object({
@@ -9,28 +16,47 @@ const NewOrderItem = z.object({
 });
 
 export const ordersRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.order.findMany({
-      include: {
-        items: {
-          include: {
-            item: {
-              select: {
-                titleEn: true,
-                titleEs: true,
-                sku: true,
+  getAll: publicProcedure
+    .input(
+      z.object({
+        selectedTableId: z.string(),
+        validStatus: z.array(z.string()),
+        sortBy: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.prisma.order.findMany({
+        where: {
+          tableId: input.selectedTableId
+            ? parseFloat(input.selectedTableId)
+            : undefined,
+          status: {
+            in: input.validStatus,
+          },
+        },
+        orderBy: {
+          [input.sortBy]: "desc",
+        },
+        include: {
+          items: {
+            include: {
+              item: {
+                select: {
+                  titleEn: true,
+                  titleEs: true,
+                  sku: true,
+                },
               },
             },
           },
-        },
-        table: {
-          include: {
-            pTable: true,
+          table: {
+            include: {
+              pTable: true,
+            },
           },
         },
-      },
-    });
-  }),
+      });
+    }),
 
   create: publicProcedure
     .input(

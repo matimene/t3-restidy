@@ -1,15 +1,16 @@
 import {
   Badge,
-  Button,
   Card,
-  Group,
+  MultiSelect,
   Text,
   createStyles,
+  Select,
   rem,
 } from "@mantine/core";
 import { ArrowDown } from "tabler-icons-react";
 import { type RouterOutputs, api } from "~/utils/api";
 import { LoadingSpinner } from "../Primary/LoadingSpinner";
+import { useState } from "react";
 
 type OrdersWithItems = RouterOutputs["orders"]["getAll"][number];
 
@@ -63,19 +64,85 @@ const useStyles = createStyles((theme) => ({
     padding: theme.spacing.xs,
     gap: rem(12),
   },
+  filterContainer: {
+    flex: 1,
+    width: "100%",
+    display: "flex",
+    padding: theme.spacing.xs,
+    gap: rem(12),
+    justifyContent: "center",
+  },
 }));
+
+const ORDERS_STATUS = [
+  { value: "PENDING", label: "Pending" },
+  { value: "CANCELED", label: "Canceled" },
+  { value: "COMPLETED", label: "Completed" },
+];
+const ORDERS_SORT_BY = [
+  {
+    value: "updatedAt",
+    label: "Updated at",
+  },
+  {
+    value: "createdAt",
+    label: "Created at",
+  },
+];
 
 export const Orders = () => {
   const { classes } = useStyles();
-  const { data: orders, isLoading } = api.orders.getAll.useQuery();
+  const [validStatus, setValidStatus] = useState(
+    ORDERS_STATUS.map((i) => i.value)
+  );
+  const [selectedTableId, setSelectedTableId] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("createdAt");
+  const { data: tables } = api.tables.getAll.useQuery();
+  const { data: orders, isLoading } = api.orders.getAll.useQuery({
+    selectedTableId,
+    validStatus,
+    sortBy,
+  });
+
+  const TABLES_ARR = tables
+    ? tables?.map((table) => ({
+        value: table.id.toString(),
+        label: table.pTable.name,
+      }))
+    : [];
 
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div className={classes.container}>
-      {orders?.map((order) => (
-        <OrderItem key={order.id} order={order} />
-      ))}
-    </div>
+    <>
+      <div className={classes.filterContainer}>
+        <MultiSelect
+          value={validStatus}
+          onChange={setValidStatus}
+          data={ORDERS_STATUS}
+          label="Show only status"
+          placeholder="Orders statuses"
+        />
+        <Select
+          label="Show only table"
+          placeholder="Pick one"
+          data={TABLES_ARR}
+          clearable
+          value={selectedTableId}
+          onChange={(value: string) => setSelectedTableId(value)}
+        />
+        <Select
+          label="Sort by"
+          data={ORDERS_SORT_BY}
+          value={sortBy}
+          onChange={(value: string) => setSortBy(value)}
+        />
+      </div>
+      <div className={classes.container}>
+        {orders?.map((order) => (
+          <OrderItem key={order.id} order={order} />
+        ))}
+      </div>
+    </>
   );
 };

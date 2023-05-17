@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { createStyles, rem } from "@mantine/core";
+import { Container, Grid, createStyles, rem } from "@mantine/core";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import useIntervalPicker from "~/utils/hooks/useIntervalPicker";
 
@@ -71,7 +71,11 @@ export const PageLayout = (props: PageLayoutProps) => {
       ) : (
         ""
       )}
-      <div className={classes.content}>{props.children}</div>
+      <Container style={{ width: "100%" }}>
+        <Grid>
+          <div className={classes.content}>{props.children}</div>
+        </Grid>
+      </Container>
     </main>
   );
 };

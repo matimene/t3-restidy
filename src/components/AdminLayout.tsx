@@ -30,7 +30,6 @@ const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
     height: rem(48),
   },
   content: {
-    maxWidth: rem(1280),
     width: "100%",
     height: "100%",
     paddingTop: rem(24),
@@ -71,7 +70,7 @@ export const PageLayout = (props: PageLayoutProps) => {
       ) : (
         ""
       )}
-      <Container style={{ width: "100%" }}>
+      <Container style={{ width: "100%", maxWidth: "90%", minWidth: rem(350) }}>
         <Grid>
           <div className={classes.content}>{props.children}</div>
         </Grid>

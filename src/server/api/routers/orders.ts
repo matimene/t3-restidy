@@ -7,7 +7,11 @@ export const OrderStatuses = {
   COMPLETED: "COMPLETED",
 };
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 const NewOrderItem = z.object({
   itemId: z.number(),
@@ -36,6 +40,37 @@ export const ordersRouter = createTRPCRouter({
         },
         orderBy: {
           [input.sortBy]: "desc",
+        },
+        include: {
+          items: {
+            include: {
+              item: {
+                select: {
+                  titleEn: true,
+                  titleEs: true,
+                  sku: true,
+                },
+              },
+            },
+          },
+          table: {
+            include: {
+              pTable: true,
+            },
+          },
+        },
+      });
+    }),
+  getOrder: publicProcedure
+    .input(
+      z.object({
+        orderId: z.number(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.prisma.order.findUniqueOrThrow({
+        where: {
+          id: input.orderId,
         },
         include: {
           items: {
@@ -101,5 +136,54 @@ export const ordersRouter = createTRPCRouter({
           });
         })
       );
+    }),
+
+  createOrderItem: privateProcedure
+    .input(
+      z.object({
+        orderId: z.number(),
+        itemId: z.number(),
+        qty: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const storeItem = await ctx.prisma.item.findUniqueOrThrow({
+        where: {
+          id: input.itemId,
+        },
+      });
+
+      await ctx.prisma.orderItem.create({
+        data: {
+          orderId: input.orderId,
+          itemId: input.itemId,
+          qty: input.qty,
+          price: storeItem.price,
+        },
+      });
+    }),
+
+  editOrderItemDeleted: privateProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        deleted: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.item.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+
+      await ctx.prisma.orderItem.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          deleted: input.deleted,
+        },
+      });
     }),
 });

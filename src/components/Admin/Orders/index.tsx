@@ -1,4 +1,4 @@
-import { MultiSelect, createStyles, Select, rem } from "@mantine/core";
+import { MultiSelect, createStyles, Select, rem, Button } from "@mantine/core";
 import { type RouterOutputs, api } from "~/utils/api";
 import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import { useState } from "react";
@@ -6,6 +6,7 @@ import { useDisclosure } from "@mantine/hooks";
 import OrderProductItem from "./OrderProductItem";
 import ModalEditOrder from "./ModalEditOrder";
 import { ORDERS_SORT_BY, ORDERS_STATUS } from "./helper";
+import { Reload } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -23,6 +24,7 @@ const useStyles = createStyles((theme) => ({
     padding: theme.spacing.xs,
     gap: rem(12),
     justifyContent: "center",
+    alignItems: "flex-end",
   },
 }));
 
@@ -36,6 +38,7 @@ export const Orders = () => {
   const [sortBy, setSortBy] = useState<string>("createdAt");
   const [editOrderId, setEditOrderId] = useState<number>();
 
+  const ctx = api.useContext();
   const { data: tables } = api.tables.getAll.useQuery();
   const { data: orders, isLoading } = api.orders.getAll.useQuery({
     selectedTableId,
@@ -80,6 +83,9 @@ export const Orders = () => {
           value={sortBy}
           onChange={(value: string) => setSortBy(value)}
         />
+        <Button onClick={() => void ctx.orders.getAll.invalidate()}>
+          <Reload size={24} strokeWidth={2} color={"white"} />
+        </Button>
       </div>
       <div className={classes.container}>
         {orders?.map((order) => (

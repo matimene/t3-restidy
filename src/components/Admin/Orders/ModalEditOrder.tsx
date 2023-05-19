@@ -1,12 +1,10 @@
 import { Button, Grid, Input, Modal, NumberInput, Select } from "@mantine/core";
 import { useId, useState } from "react";
-import { ChevronDown, Trash, MoodHappy } from "tabler-icons-react";
+import { ChevronDown, Trash, MoodHappy, TrashOff } from "tabler-icons-react";
 import { Row } from "~/components/Primary";
-import { api, type RouterOutputs } from "~/utils/api";
+import { api } from "~/utils/api";
 import { ORDERS_STATUS } from "./helper";
 import styled from "@emotion/styled";
-
-type OrdersWithItems = RouterOutputs["orders"]["getAll"][number];
 
 const ItemContainer = styled.div<{ deleted: boolean }>`
   margin: 12px 0;
@@ -56,6 +54,35 @@ const ModalEditOrder = ({
         window.alert(errorMessage);
       },
     });
+  const { mutate: editOrderStatus } = api.orders.editOrderStatus.useMutation({
+    onSuccess: () => {
+      void ctx.orders.getAll.invalidate();
+    },
+    onError: (e) => {
+      const errorMessage = e.data?.zodError;
+      window.alert(errorMessage);
+    },
+  });
+  const { mutate: editOrderItemDeleted } =
+    api.orders.editOrderItemDeleted.useMutation({
+      onSuccess: () => {
+        void ctx.orders.getAll.invalidate();
+        void ctx.orders.getOrder.invalidate();
+      },
+      onError: (e) => {
+        const errorMessage = e.data?.zodError;
+        window.alert(errorMessage);
+      },
+    });
+
+  const handleEditStatus = (status: string) => {
+    if (!orderId) return;
+
+    editOrderStatus({
+      id: orderId,
+      status,
+    });
+  };
   const handleAddNewItem = () => {
     if (!newItem?.itemId || !newItem?.qty || !orderId) return;
 
@@ -63,6 +90,12 @@ const ModalEditOrder = ({
       itemId: parseFloat(newItem.itemId),
       orderId,
       qty: newItem.qty,
+    });
+  };
+  const handleToggleOrderItemDel = (id: number, deleted: boolean) => {
+    editOrderItemDeleted({
+      id,
+      deleted: !deleted,
     });
   };
 
@@ -73,7 +106,7 @@ const ModalEditOrder = ({
           id={id}
           component="select"
           rightSection={<ChevronDown size={14} color="white" />}
-          onChange={({ target }) => window.alert(target.value)}
+          onChange={({ target }) => handleEditStatus(target.value)}
         >
           {ORDERS_STATUS.map((status) => (
             <option key={status.value} value={status.value}>
@@ -85,7 +118,15 @@ const ModalEditOrder = ({
       {order?.items?.map((item) => (
         <ItemContainer key={item.id} deleted={item.deleted}>
           <span>{item.item.sku}</span>
-          <div>{` ${item.item.titleEn ?? ""} x ${item.qty}`}</div>
+          <Row justify="space-between">
+            {` ${item.item.titleEn ?? ""} x ${item.qty}`}
+            <Button
+              compact
+              onClick={() => handleToggleOrderItemDel(item.id, item.deleted)}
+            >
+              {item.deleted ? <TrashOff size={20} /> : <Trash size={20} />}
+            </Button>
+          </Row>
         </ItemContainer>
       ))}
       {newItem && Object.keys(newItem) ? (

@@ -42,7 +42,17 @@ const OrderProductItem = ({
         <Text size="md" color="dimmed" mt={rem(6)}>
           {order?.items?.map((oItem) => {
             return (
-              <div key={oItem.id}>
+              <div
+                key={oItem.id}
+                style={
+                  oItem.deleted
+                    ? {
+                        opacity: 0.4,
+                        textDecoration: "line-through",
+                      }
+                    : {}
+                }
+              >
                 <div>{`${oItem.qty} x ${
                   oItem?.item?.titleEn ?? oItem?.item.sku
                 }`}</div>

@@ -171,7 +171,7 @@ export const ordersRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.item.findUniqueOrThrow({
+      await ctx.prisma.orderItem.findUniqueOrThrow({
         where: {
           id: input.id,
         },
@@ -183,6 +183,30 @@ export const ordersRouter = createTRPCRouter({
         },
         data: {
           deleted: input.deleted,
+        },
+      });
+    }),
+
+  editOrderStatus: privateProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        status: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.order.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+
+      await ctx.prisma.order.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: input.status,
         },
       });
     }),

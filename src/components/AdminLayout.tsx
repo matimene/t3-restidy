@@ -70,11 +70,7 @@ export const PageLayout = (props: PageLayoutProps) => {
       ) : (
         ""
       )}
-      <Container style={{ width: "100%", maxWidth: "90%", minWidth: rem(350) }}>
-        <Grid>
-          <div className={classes.content}>{props.children}</div>
-        </Grid>
-      </Container>
+      <div className={classes.content}>{props.children}</div>
     </main>
   );
 };

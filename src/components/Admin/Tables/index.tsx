@@ -53,7 +53,6 @@ const TableItem = ({
       radius="md"
       withBorder
       style={{
-        minWidth: rem(100),
         maxWidth: "40%",
         flexGrow: 1,
         display: "flex",
@@ -69,7 +68,11 @@ const TableItem = ({
           </Badge>
         </Row>
         <Row justify="center">
-          <QrIcon size="60%" onClick={onShowQr} style={{ cursor: "pointer" }} />
+          <QrIcon
+            size="auto"
+            onClick={onShowQr}
+            style={{ cursor: "pointer" }}
+          />
         </Row>
       </div>
     </Card>
@@ -92,7 +95,7 @@ export const Tables = () => {
     setSelectedTable(table);
     open();
   };
-  console.log(origin);
+
   if (isLoading) return <LoadingSpinner />;
 
   return (

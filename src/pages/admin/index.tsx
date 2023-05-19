@@ -1,7 +1,7 @@
 import { SignIn, useUser } from "@clerk/nextjs";
 import styled from "@emotion/styled";
 import { Tabs } from "@mantine/core";
-import { type NextPage } from "next";
+import { type GetStaticProps, type NextPage } from "next";
 import Head from "next/head";
 import { Dashboard } from "~/components/Admin/Dashboard";
 import { Management } from "~/components/Admin/Management";
@@ -24,7 +24,9 @@ const TABS = {
   ACCOUNT: "account",
 };
 
-const Admin: NextPage = () => {
+// type Props = { host: string | null };
+
+const AdminPage: NextPage = () => {
   const { isLoaded: userLoaded, isSignedIn } = useUser();
 
   // Return empty div if user isn't loaded
@@ -80,4 +82,8 @@ const Admin: NextPage = () => {
   );
 };
 
-export default Admin;
+// export const getStaticProps: GetStaticProps<Props> = async (context) => ({
+//   props: { host: process.env["HOST"] || null },
+// });
+
+export default AdminPage;

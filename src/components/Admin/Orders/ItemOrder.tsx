@@ -1,10 +1,11 @@
 import { Badge, Card, Text, rem } from "@mantine/core";
 import { Edit } from "tabler-icons-react";
 import { Row } from "~/components/Primary";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs } from "~/utils/api";
+
 type OrdersWithItems = RouterOutputs["orders"]["getAll"][number];
 
-const OrderProductItem = ({
+const ItemOrder = ({
   order,
   onEdit,
 }: {
@@ -70,4 +71,4 @@ const OrderProductItem = ({
   );
 };
 
-export default OrderProductItem;
+export default ItemOrder;

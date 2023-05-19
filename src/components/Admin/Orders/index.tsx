@@ -1,9 +1,9 @@
 import { MultiSelect, createStyles, Select, rem, Button } from "@mantine/core";
-import { type RouterOutputs, api } from "~/utils/api";
+import { api } from "~/utils/api";
 import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import OrderProductItem from "./OrderProductItem";
+import ItemOrder from "./ItemOrder";
 import ModalEditOrder from "./ModalEditOrder";
 import { ORDERS_SORT_BY, ORDERS_STATUS } from "./helper";
 import { Reload } from "tabler-icons-react";
@@ -89,7 +89,7 @@ export const Orders = () => {
       </div>
       <div className={classes.container}>
         {orders?.map((order) => (
-          <OrderProductItem
+          <ItemOrder
             key={order.id}
             order={order}
             onEdit={() => handleEditOrderId(order.id)}

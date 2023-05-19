@@ -1,4 +1,4 @@
-import { SignIn, useUser } from "@clerk/nextjs";
+import { SignIn, UserButton, useUser } from "@clerk/nextjs";
 import styled from "@emotion/styled";
 import { Tabs } from "@mantine/core";
 import { type GetStaticProps, type NextPage } from "next";
@@ -61,6 +61,9 @@ const AdminPage: NextPage = () => {
               <Tabs.Tab value={TABS.ACCOUNT} ml="auto">
                 My store settings
               </Tabs.Tab>
+              <div style={{ paddingRight: 12 }}>
+                <UserButton />
+              </div>
             </Tabs.List>
             <Tabs.Panel value={TABS.DASHBOARD}>
               <Dashboard />

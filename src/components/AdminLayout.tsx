@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
-import { Container, Grid, createStyles, rem } from "@mantine/core";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { createStyles, rem } from "@mantine/core";
+import { SignInButton, useUser } from "@clerk/nextjs";
 import useIntervalPicker from "~/utils/hooks/useIntervalPicker";
 
 interface LayoutProps {
@@ -59,9 +59,7 @@ export const PageLayout = (props: PageLayoutProps) => {
     <main className={classes.main}>
       {props.showNav ? (
         <nav className={classes.nav}>
-          {!!user.isSignedIn ? (
-            <SignOutButton />
-          ) : (
+          {!!user.isSignedIn && (
             <SignInButton mode="modal">
               <button className="btn">Sign in</button>
             </SignInButton>

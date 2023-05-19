@@ -25,6 +25,7 @@ const useStyles = createStyles((theme) => ({
     width: "100%",
     display: "flex",
     flexWrap: "wrap",
+    justifyContent: "center",
     padding: theme.spacing.xs,
     gap: rem(12),
   },
@@ -53,7 +54,7 @@ const TableItem = ({
       radius="md"
       withBorder
       style={{
-        maxWidth: "40%",
+        maxWidth: "35%",
         flexGrow: 1,
         display: "flex",
         flexDirection: "column",

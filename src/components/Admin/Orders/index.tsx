@@ -83,7 +83,10 @@ export const Orders = () => {
           value={sortBy}
           onChange={(value: string) => setSortBy(value)}
         />
-        <Button onClick={() => void ctx.orders.getAll.invalidate()}>
+        <Button
+          disabled={isLoading}
+          onClick={() => void ctx.orders.getAll.invalidate()}
+        >
           <Reload size={24} strokeWidth={2} color={"white"} />
         </Button>
       </div>
@@ -96,7 +99,9 @@ export const Orders = () => {
           />
         ))}
       </div>
-      <ModalEditOrder isOpen={opened} onClose={close} orderId={editOrderId} />
+      {editOrderId && (
+        <ModalEditOrder isOpen={opened} onClose={close} orderId={editOrderId} />
+      )}
     </>
   );
 };

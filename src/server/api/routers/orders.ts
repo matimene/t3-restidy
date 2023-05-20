@@ -26,10 +26,13 @@ export const ordersRouter = createTRPCRouter({
         selectedTableId: z.string(),
         validStatus: z.array(z.string()),
         sortBy: z.string(),
+        skip: z.number().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       return ctx.prisma.order.findMany({
+        take: 18,
+        skip: input.skip ?? 0,
         where: {
           tableId: input.selectedTableId
             ? parseFloat(input.selectedTableId)

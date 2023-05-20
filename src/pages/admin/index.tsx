@@ -1,7 +1,7 @@
 import { SignIn, UserButton, useUser } from "@clerk/nextjs";
 import styled from "@emotion/styled";
 import { Tabs } from "@mantine/core";
-import { type GetStaticProps, type NextPage } from "next";
+import { type NextPage } from "next";
 import Head from "next/head";
 import { Dashboard } from "~/components/Admin/Dashboard";
 import { Management } from "~/components/Admin/Management";

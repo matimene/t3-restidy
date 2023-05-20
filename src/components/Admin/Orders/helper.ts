@@ -1,7 +1,8 @@
 export const ORDERS_STATUS = [
   { value: "PENDING", label: "Pending" },
-  { value: "CANCELED", label: "Canceled" },
+  { value: "PREPARING", label: "Preparing" },
   { value: "COMPLETED", label: "Completed" },
+  { value: "CANCELED", label: "Canceled" },
 ];
 
 export const ORDERS_SORT_BY = [

@@ -1,66 +1,48 @@
-import { createStyles, rem, Image, Modal, Button, Tabs } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { createStyles, rem, Tabs, Grid, Button } from "@mantine/core";
 import { type Item } from "@prisma/client";
 import { useState } from "react";
-import { getProductLocaleProps } from "~/utils/helpers";
-import { CartFooter } from "./CartFooter";
+import CartModal from "./CartModal";
 import { LoadingSpinner } from "../Primary/LoadingSpinner";
 import styled from "@emotion/styled";
-import NumericInput from "../Primary/NumericInput";
+import useMobileDetection from "~/utils/hooks/useMobileDetection";
+import ItemItem from "./ItemItem";
+import { type CartItem, type ParsedCategory } from "./helper";
+import { ShoppingCart } from "tabler-icons-react";
+import { useDisclosure } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
   container: {
     height: "100%",
   },
   itemsContainer: {
-    maxWidth: rem(1024),
+    maxWidth: rem(1280),
     width: "100%",
     display: "flex",
     flex: "1 1 auto",
     flexDirection: "column",
     justifyContent: "start",
-    height: "100%",
     marginLeft: "auto",
     marginRight: "auto",
     borderRadius: theme.radius.sm,
+    // Simplify media query writing with theme functions
+    [theme.fn.smallerThan("md")]: {
+      paddingBottom: rem(48),
+    },
   },
-  itemActionsContainer: {
-    maxHeight: rem(36),
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  itemWrapper: {
-    padding: theme.spacing.xs,
-    height: "min-content",
+  mobileFooter: {
+    height: rem(48),
+    backgroundColor: theme.colors.yellow[6],
     width: "100%",
     display: "flex",
     alignItems: "center",
-    borderBottom: `1px dashed ${theme.colors.gray[7]};`,
-  },
-  imgWrapper: {
-    width: rem(120),
-    marginRight: theme.spacing.xs,
-  },
-  dataWrapper: {
-    height: "100%",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 600,
-    color: "white",
-  },
-  desc: {},
-  actionsitemsContainer: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingTop: theme.spacing.xxs,
-  },
-  price: {
-    fontSize: 24,
-    color: theme.colors.yellow[6],
-    textAlign: "right",
+    justifyContent: "center",
+    color: "black",
+    fontSize: theme.fontSizes.lg,
+    textTransform: "uppercase",
+    fontWeight: "bold",
+    position: "fixed",
+    bottom: 0,
+    opacity: 0.9,
   },
 }));
 
@@ -76,110 +58,6 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
-const Product = ({
-  item,
-  onAddToCart,
-  itemInCart,
-}: {
-  itemInCart: CartItem | undefined;
-  item: Item;
-  onAddToCart?: (cartItem: any) => void;
-}) => {
-  const { classes } = useStyles();
-  const [opened, { open, close }] = useDisclosure(false);
-
-  const { title, description } = getProductLocaleProps<Item>({
-    item,
-    keys: ["title", "description"],
-  });
-
-  const handleEditCart = ({ qty, notes }: { qty: number; notes?: string }) => {
-    const cartItem = {
-      itemId: item.id,
-      qty,
-      notes,
-    };
-    onAddToCart && onAddToCart(cartItem);
-  };
-
-  return (
-    <>
-      <div className={classes.itemWrapper}>
-        {item.img && (
-          <div className={classes.imgWrapper}>
-            <Image
-              styles={{
-                image: {
-                  height: "100%",
-                  minHeight: rem(120),
-                },
-              }}
-              miw={120}
-              radius="md"
-              fit="cover"
-              src={item.img}
-              alt={item.sku}
-              onClick={open}
-            />
-          </div>
-        )}
-        <div className={classes.dataWrapper}>
-          {title && <div className={classes.title}>{title}</div>}
-          {description && <div className={classes.desc}>{description}</div>}
-          {item?.price && (
-            <div className={classes.actionsitemsContainer}>
-              <div className={classes.price}>€{item?.price}</div>
-              {onAddToCart && (
-                <div className={classes.itemActionsContainer}>
-                  {!!itemInCart ? (
-                    <NumericInput
-                      value={itemInCart.qty}
-                      setValue={(qty) => handleEditCart({ qty })}
-                    />
-                  ) : (
-                    <Button
-                      variant="outline"
-                      color="yellow"
-                      onClick={() => handleEditCart({ qty: 1 })}
-                    >
-                      Add to cart
-                    </Button>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-      <Modal
-        padding="6px"
-        opened={opened}
-        onClose={close}
-        centered
-        withCloseButton={false}
-      >
-        <Image
-          width="100%"
-          radius="md"
-          fit="cover"
-          src={item.img}
-          alt={item.sku}
-          styles={{ image: { minHeight: 300 } }}
-        />
-      </Modal>
-    </>
-  );
-};
-
-type ParsedCategory = {
-  name: string;
-  code: string;
-};
-type CartItem = {
-  itemId: number;
-  qty: number;
-  notes?: string;
-};
 type ItemsListProps = {
   items: Item[];
   categories: ParsedCategory[];
@@ -196,6 +74,10 @@ export const ItemsList = ({
   noActions,
 }: ItemsListProps) => {
   const { classes } = useStyles();
+  const { isMobile } = useMobileDetection();
+  const [cartOpen, { open: openCartModal, close: closeCartModal }] =
+    useDisclosure(false);
+
   const [activeTabCode, setActiveTabCode] = useState<string>(
     categories[0]?.code as string
   );
@@ -216,6 +98,10 @@ export const ItemsList = ({
         : [...curr, updatedCartItem];
       return updatedCart;
     });
+  };
+  const handleOpenCart = () => {
+    if (!cartItems.length) return;
+    openCartModal();
   };
 
   if (isLoading) return <LoadingSpinner />;
@@ -248,19 +134,76 @@ export const ItemsList = ({
               {cat.name}
             </Tabs.Tab>
           ))}
+          {!isMobile() && cartItems.length ? (
+            <Button
+              color="yellow"
+              onClick={handleOpenCart}
+              style={{ marginLeft: 12, opacity: 0.8 }}
+            >
+              <ShoppingCart size={20} strokeWidth={2} color={"white"} />
+              <div
+                style={{
+                  marginLeft: 4,
+                  padding: "4px 8px",
+                  border: "1px solid white",
+                  borderRadius: "40%",
+                }}
+              >
+                {cartItems.length}
+              </div>
+            </Button>
+          ) : (
+            ""
+          )}
         </Tabs.List>
       </StyledTabs>
       <div className={classes.itemsContainer}>
-        {selectedItems?.map((item) => (
-          <Product
-            key={item.id}
-            item={item}
-            itemInCart={cartItems?.find((cItem) => cItem.itemId === item.id)}
-            onAddToCart={noActions ? undefined : handleEditCartItem}
-          />
-        ))}
+        {isMobile() ? (
+          selectedItems?.map((item) => (
+            <ItemItem
+              key={item.id}
+              item={item}
+              itemInCart={cartItems?.find((cItem) => cItem.itemId === item.id)}
+              onAddToCart={noActions ? undefined : handleEditCartItem}
+            />
+          ))
+        ) : (
+          <Grid gutter="xs">
+            {selectedItems?.map((item) => (
+              <Grid.Col span={6} key={item.id}>
+                <ItemItem
+                  item={item}
+                  itemInCart={cartItems?.find(
+                    (cItem) => cItem.itemId === item.id
+                  )}
+                  onAddToCart={noActions ? undefined : handleEditCartItem}
+                />
+              </Grid.Col>
+            ))}
+          </Grid>
+        )}
       </div>
-      <CartFooter
+      {isMobile() && (
+        <div className={classes.mobileFooter} onClick={handleOpenCart}>
+          {cartItems?.length ? (
+            <>
+              {`Continue`}
+              <ShoppingCart
+                size={20}
+                strokeWidth={2}
+                color={"black"}
+                style={{ margin: "0 6px" }}
+              />
+              {`(${cartItems.length})`}
+            </>
+          ) : (
+            "Pick what you want"
+          )}
+        </div>
+      )}
+      <CartModal
+        isOpen={cartOpen}
+        onClose={closeCartModal}
         cartItems={cartItems}
         items={items}
         onEditCartItem={handleEditCartItem}

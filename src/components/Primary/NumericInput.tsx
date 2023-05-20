@@ -19,7 +19,7 @@ function NumericInput({
   return (
     <Group spacing={5}>
       <ActionIcon
-        size={42}
+        size={28}
         variant="default"
         onClick={() => handlers?.current?.decrement()}
       >
@@ -33,10 +33,10 @@ function NumericInput({
         max={10}
         min={0}
         step={1}
-        styles={{ input: { width: rem(54), textAlign: "center" } }}
+        styles={{ input: { width: rem(40), textAlign: "center" } }}
       />
       <ActionIcon
-        size={42}
+        size={28}
         variant="default"
         onClick={() => handlers?.current?.increment()}
       >

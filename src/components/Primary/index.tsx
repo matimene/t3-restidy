@@ -25,7 +25,7 @@ export const Row = styled.div<RowProps>`
   justify-content: ${(props) => props.justify ?? "flex-start"};
   align-items: ${(props) => props.align ?? "flex-start"};
   gap: ${(props) => props.gap ?? 0}px;
-  margin: ${(props) => props.margin ?? 0}px;
+  margin: ${(props) => props.margin ?? ""};
   margin-top: ${(props) => props.marginTop ?? 0}px;
   margin-bottom: ${(props) => props.marginBottom ?? 0}px;
   max-width: 100%;

@@ -10,7 +10,7 @@ interface LayoutProps {
 const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
   main: {
     position: "relative",
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${bgUrl})`,
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url(${bgUrl})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
@@ -20,6 +20,7 @@ const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
     marginLeft: "auto",
     marginRight: "auto",
     height: "100vh",
+    overflowY: "scroll",
     maxHeight: "-webkit-fill-available",
   },
   nav: {

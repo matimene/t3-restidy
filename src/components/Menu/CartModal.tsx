@@ -10,6 +10,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { type Item } from "@prisma/client";
 import { api } from "~/utils/api";
 import { Row } from "../Primary";
+import { toast } from "react-hot-toast";
 
 const useStyles = createStyles(() => ({
   itemContainer: {
@@ -53,9 +54,9 @@ const CartModal = ({
   }, 0);
   const { mutate: createOrder, isLoading } = api.orders.create.useMutation({
     onSuccess: () => {
+      onClose();
       onCleanCart();
-      close();
-      window.alert("order created");
+      toast.success(`We've got your order!`);
     },
     onError: (e) => {
       const errorMessage = e.data?.zodError;

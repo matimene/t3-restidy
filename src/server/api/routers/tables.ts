@@ -21,8 +21,7 @@ export const tablesRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const storeId = ctx.store?.id as number;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      const token = uuidv4() as string;
+      const token = uuidv4();
 
       await ctx.prisma.table.create({
         data: {

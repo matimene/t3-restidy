@@ -1,4 +1,6 @@
+import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { v4 as uuidv4 } from "uuid";
 
 export const tablesRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
@@ -8,4 +10,28 @@ export const tablesRouter = createTRPCRouter({
       },
     });
   }),
+
+  create: publicProcedure
+    .input(
+      z.object({
+        pTableId: z.number(),
+        discount: z.number().optional().default(0.0),
+        identifier: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const storeId = ctx.store?.id as number;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      const token = uuidv4() as string;
+
+      await ctx.prisma.table.create({
+        data: {
+          pTableId: input.pTableId,
+          discount: input.discount,
+          identifier: input.identifier,
+          storeId,
+          token,
+        },
+      });
+    }),
 });

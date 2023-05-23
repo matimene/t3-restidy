@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import ItemOrder from "./ItemOrder";
 import ModalEditOrder from "./ModalEditOrder";
-import { ORDERS_SORT_BY, ORDERS_STATUS } from "./helper";
+import { buildTableOptions, ORDERS_SORT_BY, ORDERS_STATUS } from "./helper";
 import { Reload } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
@@ -45,12 +45,7 @@ export const Orders = () => {
     validStatus,
     sortBy,
   });
-  const TABLES_ARR = tables
-    ? tables?.map((table) => ({
-        value: table.id.toString(),
-        label: table.pTable.name,
-      }))
-    : [];
+  const TABLES_OTIONS = buildTableOptions(tables);
 
   const handleEditOrderId = (id: number) => {
     setEditOrderId(id);
@@ -72,7 +67,7 @@ export const Orders = () => {
         <Select
           label="Show only table"
           placeholder="Pick one"
-          data={TABLES_ARR}
+          data={TABLES_OTIONS}
           clearable
           value={selectedTableId}
           onChange={(value: string) => setSelectedTableId(value)}

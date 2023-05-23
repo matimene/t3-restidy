@@ -1,3 +1,8 @@
+import { type Table } from "@prisma/client";
+import { type RouterOutputs } from "~/utils/api";
+
+type TableWithPtable = RouterOutputs["tables"]["getAll"][number];
+
 export const ORDERS_STATUS = [
   { value: "PENDING", label: "Pending" },
   { value: "PREPARING", label: "Preparing" },
@@ -15,3 +20,11 @@ export const ORDERS_SORT_BY = [
     label: "Created at",
   },
 ];
+
+export const buildTableOptions = (tables?: TableWithPtable[]) =>
+  tables
+    ? tables?.map((table) => ({
+        value: table.id.toString(),
+        label: table.pTable.name,
+      }))
+    : [];

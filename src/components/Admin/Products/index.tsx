@@ -3,8 +3,8 @@ import { api } from "~/utils/api";
 import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import ItemOrder from "./ItemOrder";
-import ModalEditOrder from "./ModalEditOrder";
+import ItemProduct from "./ItemProduct";
+import ModalEditProduct from "./ModalEditProduct";
 import { buildTableOptions, ORDERS_SORT_BY, ORDERS_STATUS } from "./helper";
 import { Reload } from "tabler-icons-react";
 
@@ -28,7 +28,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const Orders = () => {
+export const Orders = () => {
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
   const [validStatus, setValidStatus] = useState(
@@ -87,7 +87,7 @@ const Orders = () => {
       </div>
       <div className={classes.container}>
         {orders?.map((order) => (
-          <ItemOrder
+          <ItemProduct
             key={order.id}
             order={order}
             onEdit={() => handleEditOrderId(order.id)}
@@ -95,10 +95,12 @@ const Orders = () => {
         ))}
       </div>
       {editOrderId && (
-        <ModalEditOrder isOpen={opened} onClose={close} orderId={editOrderId} />
+        <ModalEditProduct
+          isOpen={opened}
+          onClose={close}
+          orderId={editOrderId}
+        />
       )}
     </>
   );
 };
-
-export default Orders;

@@ -33,7 +33,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const Tables = () => {
+const Tables = () => {
   const [seeAsCards, setSeeAsCards] = useState(true);
   const [sortBy, setSortBy] = useState<string>("createdAt");
   const { classes } = useStyles();
@@ -128,3 +128,5 @@ export const Tables = () => {
     </>
   );
 };
+
+export default Tables;

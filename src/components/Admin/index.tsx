@@ -1,25 +1,64 @@
-import { createStyles } from "@mantine/core";
-import { api } from "~/utils/api";
-import { LoadingSpinner } from "../Primary/LoadingSpinner";
+import dynamic from "next/dynamic";
+import { Tabs } from "@mantine/core";
+import { UserButton } from "@clerk/nextjs";
+import { useState } from "react";
 
-const useStyles = createStyles((theme) => ({
-  container: {
-    flex: 1,
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    color: "white",
-    fontSize: theme.fontSizes.md,
-  },
-}));
+const DynamicOrders = dynamic(() => import("./Orders"), {
+  loading: () => <p>Loading...</p>,
+});
 
-export const Dashboard = () => {
-  const { classes } = useStyles();
-  const { data: storeData, isLoading: storeLoading } =
-    api.stores.loadDataByCode.useQuery();
-  const { data: items, isLoading } = api.items.getAll.useQuery();
+const DynamicTables = dynamic(() => import("./Tables"), {
+  loading: () => <p>Loading...</p>,
+});
 
-  if (storeLoading || isLoading) if (isLoading) return <LoadingSpinner />;
+const TABS = {
+  DASHBOARD: "dashboard",
+  TABLES: "tables",
+  ORDERS: "orders",
+  MANAGEMENT: "management",
+  ACCOUNT: "account",
+  PRODUCTS: "products",
+};
 
-  return <div className={classes.container}>Admin dashboard</div>;
+const Handler = ({ selectedValue }: { selectedValue: string | null }) => {
+  switch (selectedValue) {
+    case TABS.ACCOUNT:
+      return <div>My store settings</div>;
+    case TABS.TABLES:
+      return <DynamicTables />;
+    case TABS.ORDERS:
+    default:
+      return <DynamicOrders />;
+  }
+};
+
+export const Content = () => {
+  const [activeTab, setActiveTab] = useState<string | null>(TABS.ORDERS);
+
+  return (
+    <Tabs
+      value={activeTab}
+      onTabChange={setActiveTab}
+      styles={{
+        root: {
+          width: "100%",
+        },
+      }}
+    >
+      <Tabs.List>
+        {/* <Tabs.Tab value={TABS.DASHBOARD}>Dashboard</Tabs.Tab> */}
+        <Tabs.Tab value={TABS.ORDERS}>Orders</Tabs.Tab>
+        <Tabs.Tab value={TABS.TABLES}>Tables</Tabs.Tab>
+        <Tabs.Tab value={TABS.PRODUCTS}>Products</Tabs.Tab>
+        <Tabs.Tab value={TABS.MANAGEMENT}>Management</Tabs.Tab>
+        <Tabs.Tab value={TABS.ACCOUNT} ml="auto">
+          My store settings
+        </Tabs.Tab>
+        <div style={{ paddingRight: 12 }}>
+          <UserButton />
+        </div>
+      </Tabs.List>
+      <Handler selectedValue={activeTab} />
+    </Tabs>
+  );
 };

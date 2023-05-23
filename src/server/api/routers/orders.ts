@@ -33,6 +33,9 @@ export const ordersRouter = createTRPCRouter({
       return ctx.prisma.order.findMany({
         take: 18,
         skip: input.skip ?? 0,
+        orderBy: {
+          [input.sortBy]: "desc",
+        },
         where: {
           tableId: input.selectedTableId
             ? parseFloat(input.selectedTableId)
@@ -40,9 +43,6 @@ export const ordersRouter = createTRPCRouter({
           status: {
             in: input.validStatus,
           },
-        },
-        orderBy: {
-          [input.sortBy]: "desc",
         },
         include: {
           items: {

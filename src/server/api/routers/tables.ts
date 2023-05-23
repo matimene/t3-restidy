@@ -1,17 +1,35 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { v4 as uuidv4 } from "uuid";
 
 export const tablesRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.table.findMany({
-      include: {
-        pTable: true,
-      },
-    });
-  }),
+  getAll: publicProcedure
+    .input(
+      z
+        .object({
+          sortBy: z.string().optional(),
+          skip: z.number().optional(),
+        })
+        .optional()
+    )
+    .query(({ ctx, input }) => {
+      return ctx.prisma.table.findMany({
+        take: 18,
+        skip: input?.skip ?? 0,
+        orderBy: {
+          [input?.sortBy ?? "updatedAt"]: "desc",
+        },
+        include: {
+          pTable: true,
+        },
+      });
+    }),
 
-  create: publicProcedure
+  create: privateProcedure
     .input(
       z.object({
         pTableId: z.number(),
@@ -30,6 +48,29 @@ export const tablesRouter = createTRPCRouter({
           identifier: input.identifier,
           storeId,
           token,
+        },
+      });
+    }),
+  editTableOpen: privateProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        open: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.orderItem.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+
+      await ctx.prisma.table.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          open: input.open,
         },
       });
     }),

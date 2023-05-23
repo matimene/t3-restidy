@@ -9,6 +9,10 @@ export const TABLES_SORT_BY = [
     value: "createdAt",
     label: "Created at",
   },
+  {
+    value: "open",
+    label: "Open",
+  },
 ];
 
 export const buildTableOptions = (pTables?: PhysicalTable[]) =>

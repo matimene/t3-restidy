@@ -45,7 +45,7 @@ const Orders = () => {
     validStatus,
     sortBy,
   });
-  const TABLES_OTIONS = buildTableOptions(tables);
+  const TABLES_OPTIONS = buildTableOptions(tables);
 
   const handleEditOrderId = (id: number) => {
     setEditOrderId(id);
@@ -67,7 +67,7 @@ const Orders = () => {
         <Select
           label="Show only table"
           placeholder="Pick one"
-          data={TABLES_OTIONS}
+          data={TABLES_OPTIONS}
           clearable
           value={selectedTableId}
           onChange={(value: string) => setSelectedTableId(value)}

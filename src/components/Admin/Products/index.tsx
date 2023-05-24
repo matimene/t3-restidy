@@ -1,11 +1,16 @@
-import { MultiSelect, createStyles, Select, rem, Button } from "@mantine/core";
+import {
+  MultiSelect,
+  createStyles,
+  Select,
+  rem,
+  Button,
+  Table,
+} from "@mantine/core";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import { useState } from "react";
-import { useDisclosure } from "@mantine/hooks";
 import ItemProduct from "./ItemProduct";
-import ModalEditProduct from "./ModalEditProduct";
-import { buildTableOptions, ORDERS_SORT_BY, ORDERS_STATUS } from "./helper";
+import { ORDERS_SORT_BY, ORDERS_STATUS } from "./helper";
 import { Reload } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
@@ -28,28 +33,18 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const Orders = () => {
+const Products = () => {
   const { classes } = useStyles();
-  const [opened, { open, close }] = useDisclosure(false);
   const [validStatus, setValidStatus] = useState(
     ORDERS_STATUS.map((i) => i.value)
   );
-  const [selectedTableId, setSelectedTableId] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("createdAt");
-  const [editOrderId, setEditOrderId] = useState<number>();
 
   const ctx = api.useContext();
-  const { data: tables } = api.tables.getAll.useQuery();
-  const { data: orders, isLoading } = api.orders.getAll.useQuery({
-    selectedTableId,
-    validStatus,
-    sortBy,
-  });
-  const TABLES_OTIONS = buildTableOptions(tables);
+  const { data: items, isLoading } = api.items.getAll.useQuery();
 
-  const handleEditOrderId = (id: number) => {
-    setEditOrderId(id);
-    open();
+  const handleToggleActive = () => {
+    console.log("go");
   };
 
   if (isLoading) return <LoadingSpinner />;
@@ -65,14 +60,6 @@ export const Orders = () => {
           placeholder="Orders statuses"
         />
         <Select
-          label="Show only table"
-          placeholder="Pick one"
-          data={TABLES_OTIONS}
-          clearable
-          value={selectedTableId}
-          onChange={(value: string) => setSelectedTableId(value)}
-        />
-        <Select
           label="Sort by"
           data={ORDERS_SORT_BY}
           value={sortBy}
@@ -86,21 +73,31 @@ export const Orders = () => {
         </Button>
       </div>
       <div className={classes.container}>
-        {orders?.map((order) => (
-          <ItemProduct
-            key={order.id}
-            order={order}
-            onEdit={() => handleEditOrderId(order.id)}
-          />
-        ))}
+        <Table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Active</th>
+              <th>Sku</th>
+              <th>Title English</th>
+              <th>Title Spanish</th>
+              <th>Description English</th>
+              <th>Description Spanish</th>
+              <th>Categories</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items?.map((item) => (
+              <ItemProduct
+                key={item.id}
+                item={item}
+                onToggleActive={handleToggleActive}
+              />
+            ))}
+          </tbody>
+        </Table>
       </div>
-      {editOrderId && (
-        <ModalEditProduct
-          isOpen={opened}
-          onClose={close}
-          orderId={editOrderId}
-        />
-      )}
     </>
   );
 };
+export default Products;

@@ -6,8 +6,10 @@ import { useState } from "react";
 const DynamicOrders = dynamic(() => import("./Orders"), {
   loading: () => <p>Loading...</p>,
 });
-
 const DynamicTables = dynamic(() => import("./Tables"), {
+  loading: () => <p>Loading...</p>,
+});
+const DynamicProducts = dynamic(() => import("./Products"), {
   loading: () => <p>Loading...</p>,
 });
 
@@ -26,6 +28,8 @@ const Handler = ({ selectedValue }: { selectedValue: string | null }) => {
       return <div>My store settings</div>;
     case TABS.TABLES:
       return <DynamicTables />;
+    case TABS.PRODUCTS:
+      return <DynamicProducts />;
     case TABS.ORDERS:
     default:
       return <DynamicOrders />;

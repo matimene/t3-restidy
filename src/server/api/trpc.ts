@@ -118,12 +118,12 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
 const enforceUserStore = t.middleware(async ({ ctx, next }) => {
   const { user, store } = ctx;
 
-  const storeIds = user?.storeIds.split(";").map((id) => parseInt(id));
+  const storeIds = user?.storeIds.split(";");
 
   if (
     !user ||
     !store ||
-    !storeIds?.includes(store.id) ||
+    !storeIds?.includes(store.id.toString()) ||
     (user.role !== USER_TYPES.SUPERADMIN && user.role !== USER_TYPES.GOD)
   ) {
     throw new TRPCError({

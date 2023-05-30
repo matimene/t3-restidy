@@ -25,7 +25,7 @@ export const menusRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const storeId = ctx.store?.id as number;
+      const storeId = ctx.store.id;
 
       await ctx.prisma.menu.create({
         data: {

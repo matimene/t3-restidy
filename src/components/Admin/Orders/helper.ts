@@ -1,16 +1,16 @@
-import { type Table } from "@prisma/client";
+import { ORDER_STATUS } from "prisma/types";
 import { type RouterOutputs } from "~/utils/api";
 
 type TableWithPtable = RouterOutputs["tables"]["getAll"][number];
 
-export const ORDERS_STATUS = [
-  { value: "PENDING", label: "Pending" },
-  { value: "PREPARING", label: "Preparing" },
-  { value: "COMPLETED", label: "Completed" },
-  { value: "CANCELED", label: "Canceled" },
+export const ORDERS_STATUS_OPTIONS = [
+  { value: ORDER_STATUS.PENDING, label: "Pending" },
+  { value: ORDER_STATUS.PROCESSING, label: "Processing" },
+  { value: ORDER_STATUS.COMPLETED, label: "Completed" },
+  { value: ORDER_STATUS.CANCELED, label: "Canceled" },
 ];
 
-export const ORDERS_SORT_BY = [
+export const ORDERS_SORTBY_OPTIONS = [
   {
     value: "updatedAt",
     label: "Updated at",

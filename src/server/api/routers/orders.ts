@@ -1,12 +1,5 @@
 import { z } from "zod";
 
-export const OrderStatuses = {
-  PENDING: "PENDING",
-  PROCESSING: "PROCESSING",
-  CANCELED: "CANCELED",
-  COMPLETED: "COMPLETED",
-};
-
 import {
   createTRPCRouter,
   privateProcedure,

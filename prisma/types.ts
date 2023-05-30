@@ -1,0 +1,15 @@
+export const USER_TYPES = {
+  USER: "USER",
+  ADMIN: "ADMIN",
+  SUPERADMIN: "SUPERADMIN",
+  GOD: "GOD",
+};
+export const USER_TYPES_VALUES = Object.values(USER_TYPES);
+
+export const ORDER_STATUS = {
+  PENDING: "PENDING",
+  PROCESSING: "PROCESSING",
+  CANCELED: "CANCELED",
+  COMPLETED: "COMPLETED",
+};
+export const ORDER_STATUS_VALUES = Object.values(ORDER_STATUS);

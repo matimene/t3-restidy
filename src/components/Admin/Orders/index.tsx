@@ -5,7 +5,11 @@ import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import ItemOrder from "./ItemOrder";
 import ModalEditOrder from "./ModalEditOrder";
-import { buildTableOptions, ORDERS_SORT_BY, ORDERS_STATUS } from "./helper";
+import {
+  buildTableOptions,
+  ORDERS_SORTBY_OPTIONS,
+  ORDERS_STATUS_OPTIONS,
+} from "./helper";
 import { Reload } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
@@ -32,7 +36,7 @@ const Orders = () => {
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
   const [validStatus, setValidStatus] = useState(
-    ORDERS_STATUS.map((i) => i.value)
+    ORDERS_STATUS_OPTIONS.map((i) => i.value)
   );
   const [selectedTableId, setSelectedTableId] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("createdAt");
@@ -60,7 +64,7 @@ const Orders = () => {
         <MultiSelect
           value={validStatus}
           onChange={setValidStatus}
-          data={ORDERS_STATUS}
+          data={ORDERS_STATUS_OPTIONS}
           label="Show only status"
           placeholder="Orders statuses"
         />
@@ -74,7 +78,7 @@ const Orders = () => {
         />
         <Select
           label="Sort by"
-          data={ORDERS_SORT_BY}
+          data={ORDERS_SORTBY_OPTIONS}
           value={sortBy}
           onChange={(value: string) => setSortBy(value)}
         />

@@ -36,11 +36,18 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
       where: { code },
     });
   }
+  let user;
+  if (userId) {
+    user = await prisma.user.findUniqueOrThrow({
+      where: { externalId: userId },
+    });
+  }
 
   return {
     prisma,
     store,
     userId,
+    user,
   };
 };
 
@@ -55,6 +62,7 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { getAuth } from "@clerk/nextjs/server";
+import { USER_TYPES } from "prisma/types";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -107,4 +115,30 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   });
 });
 
-export const privateProcedure = t.procedure.use(enforceUserIsAuthed);
+const enforceUserStore = t.middleware(async ({ ctx, next }) => {
+  const { user, store } = ctx;
+
+  const storeIds = user?.storeIds.split(";").map((id) => parseInt(id));
+
+  if (
+    !user ||
+    !store ||
+    !storeIds?.includes(store.id) ||
+    (user.role !== USER_TYPES.SUPERADMIN && user.role !== USER_TYPES.GOD)
+  ) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+    });
+  }
+
+  return next({
+    ctx: {
+      user: { ...user, scopes: user.scopes.split(";") },
+      store,
+    },
+  });
+});
+
+export const privateProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(enforceUserStore);

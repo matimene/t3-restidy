@@ -57,23 +57,28 @@ export const TableItem = ({
   return (
     <tr style={{ opacity: table?.open ? 1 : 0.7 }}>
       <td>
-        <QrIcon size="24px" onClick={onShowQr} style={{ cursor: "pointer" }} />
+        <QrIcon
+          size="24px"
+          onClick={() => (table?.open ? onShowQr() : "")}
+          style={{
+            cursor: table?.open ? "pointer" : "not-allowed",
+            marginLeft: rem(12),
+          }}
+        />
       </td>
       <td>{table?.open ? "open" : "closed"}</td>
       <td>{table?.pTable?.name}</td>
       <td>{table?.identifier}</td>
       <td>{table?.discount}%</td>
-      <td>
-        <Row gap={12}>
-          <Button>Delete</Button>
-          <Button
-            onClick={onToggleOpen}
-            color={table?.open ? "orange" : "green"}
-            style={{ minWidth: rem(100) }}
-          >
-            {table?.open ? "Close" : "Re-open"}
-          </Button>
-        </Row>
+      <td style={{ display: "flex", gap: 12 }}>
+        <Button>Delete</Button>
+        <Button
+          onClick={onToggleOpen}
+          color={table?.open ? "orange" : "green"}
+          style={{ minWidth: rem(100) }}
+        >
+          {table?.open ? "Close" : "Re-open"}
+        </Button>
       </td>
     </tr>
   );

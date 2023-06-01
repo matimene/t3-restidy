@@ -1,6 +1,6 @@
 "use client";
 
-import { createStyles, rem, Button, Select, Table } from "@mantine/core";
+import { createStyles, Button, Select, Table, rem } from "@mantine/core";
 import { type RouterOutputs, api } from "~/utils/api";
 import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import { useState } from "react";
@@ -99,7 +99,7 @@ const Tables = () => {
                   <th>PTable Name</th>
                   <th>Identifier</th>
                   <th>Discount</th>
-                  <th>Actions</th>
+                  <th style={{ width: rem(250) }}>Actions</th>
                 </tr>
               </thead>
               <tbody>

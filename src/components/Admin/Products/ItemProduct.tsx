@@ -27,7 +27,7 @@ const ItemProduct = ({
           ""
         )}
       </td>
-      <td>{item.active ? "active" : "closed"}</td>
+      <td>{item.active ? "active" : "disabled"}</td>
       <td>{item.sku}</td>
       <td>{item?.titleEn}</td>
       <td>{item?.titleEs}</td>

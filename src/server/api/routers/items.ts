@@ -6,13 +6,27 @@ import {
 } from "~/server/api/trpc";
 
 export const itemsRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const storeId = ctx.store?.id;
-    const items = await ctx.prisma.item.findMany({
-      where: { storeId, active: true },
-    });
-    return items;
-  }),
+  getAll: publicProcedure
+    .input(
+      z
+        .object({
+          sortBy: z.string(),
+          skip: z.number().optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const storeId = ctx.store?.id;
+      const items = await ctx.prisma.item.findMany({
+        take: 18,
+        skip: input?.skip ?? 0,
+        orderBy: {
+          [input?.sortBy ?? "titleEn"]: "asc",
+        },
+        where: { storeId, active: true },
+      });
+      return items;
+    }),
 
   create: privateProcedure
     .input(
@@ -30,7 +44,7 @@ export const itemsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const storeId = ctx.store?.id as number;
+      const storeId = ctx.store.id;
 
       await ctx.prisma.item.create({
         data: {

@@ -14,7 +14,6 @@ import { forwardRef, useId, useState } from "react";
 import { ChevronDown, Trash, TrashOff } from "tabler-icons-react";
 import { Row } from "~/components/Primary";
 import { api } from "~/utils/api";
-import { ORDERS_STATUS } from "./helper";
 import styled from "@emotion/styled";
 
 const ItemContainer = styled.div<{ deleted: boolean }>`
@@ -161,11 +160,7 @@ const ModalEditOrder = ({
           rightSection={<ChevronDown size={14} color="white" />}
           onChange={({ target }) => handleEditStatus(target.value)}
         >
-          {ORDERS_STATUS.map((status) => (
-            <option key={status.value} value={status.value}>
-              {status.label}
-            </option>
-          ))}
+          algo
         </Input>
       </Input.Wrapper>
       {order?.items?.map((item) => (

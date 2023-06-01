@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import { Tabs } from "@mantine/core";
 import { UserButton } from "@clerk/nextjs";
 import { useState } from "react";
+import ThemeToggler from "../Primary/ThemeToggler";
 
 const DynamicOrders = dynamic(() => import("./Orders"), {
   loading: () => <p>Loading...</p>,
@@ -58,7 +59,14 @@ export const Content = () => {
         <Tabs.Tab value={TABS.ACCOUNT} ml="auto">
           My store settings
         </Tabs.Tab>
-        <div style={{ paddingRight: 12 }}>
+        <div
+          style={{ display: "flex", alignItems: "center", paddingRight: 12 }}
+        >
+          <ThemeToggler />
+        </div>
+        <div
+          style={{ display: "flex", alignItems: "center", paddingRight: 12 }}
+        >
           <UserButton />
         </div>
       </Tabs.List>

@@ -28,6 +28,18 @@ export const itemsRouter = createTRPCRouter({
       });
       return items;
     }),
+  getOne: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const item = await ctx.prisma.item.findUniqueOrThrow({
+        where: { id: input.id },
+      });
+      return item;
+    }),
 
   create: privateProcedure
     .input(
@@ -54,5 +66,43 @@ export const itemsRouter = createTRPCRouter({
           ...input,
         },
       });
+    }),
+
+  edit: privateProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        price: z.number(),
+        sku: z.string(),
+        img: z.string().nullish(),
+        categoryCodes: z.string().nullish(),
+        descriptionEn: z.string().nullish(),
+        descriptionEs: z.string().nullish(),
+        titleEn: z.string().nullish(),
+        titleEs: z.string().nullish(),
+        tagsEn: z.string().nullish(),
+        tagsEs: z.string().nullish(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const updatedProduct = await ctx.prisma.item.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          price: input?.price,
+          sku: input?.sku,
+          img: input?.img,
+          categoryCodes: input?.categoryCodes,
+          descriptionEn: input?.descriptionEn,
+          descriptionEs: input?.descriptionEs,
+          titleEn: input?.titleEn,
+          titleEs: input?.titleEs,
+          tagsEn: input?.tagsEn,
+          tagsEs: input?.tagsEs,
+        },
+      });
+
+      return updatedProduct;
     }),
 });

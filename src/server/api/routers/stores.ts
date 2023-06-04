@@ -30,9 +30,10 @@ export const storesRouter = createTRPCRouter({
 
     return { menus, categories };
   }),
+
   loadMenusAndCats: publicProcedure
     .input(z.object({ code: z.string() }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx }) => {
       const storeId = ctx.store?.id;
       if (!storeId)
         throw new TRPCError({

@@ -118,18 +118,21 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
 const enforceUserStore = t.middleware(async ({ ctx, next }) => {
   const { user, store } = ctx;
 
-  const storeIds = user?.storeIds.split(";");
-
-  if (
-    !user ||
-    !store ||
-    !storeIds?.includes(store.id.toString()) ||
-    (user.role !== USER_TYPES.SUPERADMIN && user.role !== USER_TYPES.GOD)
-  ) {
+  if (!user || !store) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
     });
   }
+
+  const hasStoreId = user.storeIds.split(";").includes(store.id.toString());
+  if (
+    !hasStoreId &&
+    user?.role !== USER_TYPES.SUPERADMIN &&
+    user?.role !== USER_TYPES.GOD
+  )
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+    });
 
   return next({
     ctx: {

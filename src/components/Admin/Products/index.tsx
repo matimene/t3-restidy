@@ -5,6 +5,8 @@ import { useState } from "react";
 import ItemProduct from "./ItemProduct";
 import { PRODUCTS_SORT_BY } from "./helper";
 import { Reload } from "tabler-icons-react";
+import { useDisclosure } from "@mantine/hooks";
+import ModalEditProduct from "./ModalEditProduct";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -26,6 +28,8 @@ const useStyles = createStyles((theme) => ({
 const Products = () => {
   const { classes } = useStyles();
   const [sortBy, setSortBy] = useState<string>("active");
+  const [opened, { open, close }] = useDisclosure(false);
+  const [editProductId, setEditProductId] = useState<number | undefined>();
 
   const ctx = api.useContext();
   const { data: items, isLoading } = api.items.getAll.useQuery({
@@ -58,9 +62,9 @@ const Products = () => {
         <Table>
           <thead>
             <tr>
-              <th>Image</th>
-              <th>Status</th>
               <th>Sku</th>
+              <th>Status</th>
+              <th>Image</th>
               <th>Title (ENG)</th>
               <th>Title (SPA)</th>
               <th>Description (ENG)</th>
@@ -75,11 +79,22 @@ const Products = () => {
                 key={item.id}
                 item={item}
                 onToggleActive={handleToggleActive}
+                onEdit={() => {
+                  setEditProductId(item.id);
+                  open();
+                }}
               />
             ))}
           </tbody>
         </Table>
       </div>
+      {editProductId && (
+        <ModalEditProduct
+          isOpen={opened}
+          onClose={close}
+          itemId={editProductId}
+        />
+      )}
     </>
   );
 };

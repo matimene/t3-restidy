@@ -38,7 +38,7 @@ export const tablesRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const storeId = ctx.store?.id as number;
+      const storeId = ctx.store.id;
       const token = uuidv4();
 
       await ctx.prisma.table.create({

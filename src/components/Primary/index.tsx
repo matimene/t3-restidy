@@ -30,3 +30,19 @@ export const Row = styled.div<RowProps>`
   margin-bottom: ${(props) => props.marginBottom ?? 0}px;
   max-width: 100%;
 `;
+
+export const ActionsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+`;
+
+export const TwoLineLable = styled.div`
+  display: -webkit-box;
+  max-width: 400px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;

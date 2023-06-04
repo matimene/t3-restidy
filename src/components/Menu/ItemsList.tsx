@@ -140,7 +140,7 @@ export const ItemsList = ({
               onClick={handleOpenCart}
               style={{ marginLeft: 12, opacity: 0.8 }}
             >
-              <ShoppingCart size={20} strokeWidth={2} color={"white"} />
+              <ShoppingCart size={20} strokeWidth={1.5} color={"white"} />
               <div
                 style={{
                   marginLeft: 4,
@@ -190,7 +190,7 @@ export const ItemsList = ({
               {`Continue`}
               <ShoppingCart
                 size={20}
-                strokeWidth={2}
+                strokeWidth={1.5}
                 color={"black"}
                 style={{ margin: "0 6px" }}
               />

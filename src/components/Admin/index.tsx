@@ -1,8 +1,6 @@
 import dynamic from "next/dynamic";
-import { Tabs } from "@mantine/core";
-import { UserButton } from "@clerk/nextjs";
 import { useState } from "react";
-import ThemeToggler from "../Primary/ThemeToggler";
+import AdminHeader from "./AdminHeader";
 
 const DynamicOrders = dynamic(() => import("./Orders"), {
   loading: () => <p>Loading...</p>,
@@ -13,14 +11,26 @@ const DynamicTables = dynamic(() => import("./Tables"), {
 const DynamicProducts = dynamic(() => import("./Products"), {
   loading: () => <p>Loading...</p>,
 });
+const DynamicCategories = dynamic(() => import("./Categories"), {
+  loading: () => <p>Loading...</p>,
+});
+const DynamicMenus = dynamic(() => import("./Menus"), {
+  loading: () => <p>Loading...</p>,
+});
+const DynamicPhysicalTables = dynamic(() => import("./PhysicalTables"), {
+  loading: () => <p>Loading...</p>,
+});
 
 const TABS = {
   DASHBOARD: "dashboard",
-  TABLES: "tables",
   ORDERS: "orders",
+  TABLES: "tables",
   MANAGEMENT: "management",
-  ACCOUNT: "account",
+  CATEGORIES: "categories",
+  PHYSICAL_TABLES: "physical tables",
+  MENUS: "menus",
   PRODUCTS: "products",
+  ACCOUNT: "account",
 };
 
 const Handler = ({ selectedValue }: { selectedValue: string | null }) => {
@@ -31,46 +41,62 @@ const Handler = ({ selectedValue }: { selectedValue: string | null }) => {
       return <DynamicTables />;
     case TABS.PRODUCTS:
       return <DynamicProducts />;
+    case TABS.CATEGORIES:
+      return <DynamicCategories />;
+    case TABS.MENUS:
+      return <DynamicMenus />;
+    case TABS.PHYSICAL_TABLES:
+      return <DynamicPhysicalTables />;
     case TABS.ORDERS:
     default:
       return <DynamicOrders />;
   }
 };
 
+function buildTabLinks(setActive: (tab: string) => void) {
+  return [
+    {
+      label: TABS.ORDERS,
+      key: TABS.ORDERS,
+      onClick: () => setActive(TABS.ORDERS),
+    },
+    {
+      label: TABS.TABLES,
+      key: TABS.TABLES,
+      onClick: () => setActive(TABS.TABLES),
+    },
+    {
+      label: TABS.MANAGEMENT,
+      key: TABS.MANAGEMENT,
+      links: [
+        {
+          label: TABS.CATEGORIES,
+          key: TABS.CATEGORIES,
+          onClick: () => setActive(TABS.CATEGORIES),
+        },
+        {
+          label: TABS.MENUS,
+          key: TABS.MENUS,
+          onClick: () => setActive(TABS.MENUS),
+        },
+        {
+          label: TABS.PRODUCTS,
+          key: TABS.PRODUCTS,
+          onClick: () => setActive(TABS.PRODUCTS),
+        },
+      ],
+    },
+  ];
+}
+
 export const Content = () => {
   const [activeTab, setActiveTab] = useState<string | null>(TABS.ORDERS);
+  const tabLinks = buildTabLinks(setActiveTab);
 
   return (
-    <Tabs
-      value={activeTab}
-      onTabChange={setActiveTab}
-      styles={{
-        root: {
-          width: "100%",
-        },
-      }}
-    >
-      <Tabs.List>
-        {/* <Tabs.Tab value={TABS.DASHBOARD}>Dashboard</Tabs.Tab> */}
-        <Tabs.Tab value={TABS.ORDERS}>Orders</Tabs.Tab>
-        <Tabs.Tab value={TABS.TABLES}>Tables</Tabs.Tab>
-        <Tabs.Tab value={TABS.PRODUCTS}>Products</Tabs.Tab>
-        <Tabs.Tab value={TABS.MANAGEMENT}>Management</Tabs.Tab>
-        <Tabs.Tab value={TABS.ACCOUNT} ml="auto">
-          My store settings
-        </Tabs.Tab>
-        <div
-          style={{ display: "flex", alignItems: "center", paddingRight: 12 }}
-        >
-          <ThemeToggler />
-        </div>
-        <div
-          style={{ display: "flex", alignItems: "center", paddingRight: 12 }}
-        >
-          <UserButton />
-        </div>
-      </Tabs.List>
+    <>
+      <AdminHeader links={tabLinks} />
       <Handler selectedValue={activeTab} />
-    </Tabs>
+    </>
   );
 };

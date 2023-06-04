@@ -1,10 +1,9 @@
-import { createStyles, Select, rem, Button, Table } from "@mantine/core";
+import { createStyles, rem, Button, Table, Text } from "@mantine/core";
 import { api } from "~/utils/api";
-import { LoadingSpinner } from "../../Primary/LoadingSpinner";
+import { LoadingSpinner } from "../Primary/LoadingSpinner";
 import { useState } from "react";
-import ItemProduct from "./ItemProduct";
-import { PRODUCTS_SORT_BY } from "./helper";
 import { Reload } from "tabler-icons-react";
+import { Row } from "~/components/Primary";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -17,20 +16,19 @@ const useStyles = createStyles((theme) => ({
   filterContainer: {
     width: "100%",
     display: "flex",
+    padding: theme.spacing.xs,
     gap: rem(12),
     justifyContent: "center",
     alignItems: "flex-end",
   },
 }));
 
-const Products = () => {
+const Menus = () => {
   const { classes } = useStyles();
   const [sortBy, setSortBy] = useState<string>("active");
 
   const ctx = api.useContext();
-  const { data: items, isLoading } = api.items.getAll.useQuery({
-    sortBy,
-  });
+  const { data: items, isLoading } = api.menus.getAll.useQuery();
 
   const handleToggleActive = () => {
     console.log("go");
@@ -40,13 +38,10 @@ const Products = () => {
 
   return (
     <>
+      <Row align="center" justify="center">
+        <Text>Menus</Text>
+      </Row>
       <div className={classes.filterContainer}>
-        <Select
-          label="Sort by"
-          data={PRODUCTS_SORT_BY}
-          value={sortBy}
-          onChange={(value: string) => setSortBy(value)}
-        />
         <Button
           disabled={isLoading}
           onClick={() => void ctx.orders.getAll.invalidate()}
@@ -58,24 +53,24 @@ const Products = () => {
         <Table>
           <thead>
             <tr>
-              <th>Image</th>
-              <th>Status</th>
-              <th>Sku</th>
-              <th>Title (ENG)</th>
-              <th>Title (SPA)</th>
-              <th>Description (ENG)</th>
-              <th>Description (SPA)</th>
-              <th>Categories</th>
-              <th>Actions</th>
+              <th>Active</th>
+              <th>Name (ENG)</th>
+              <th>Name (SPA)</th>
+              <th>Sections</th>
             </tr>
           </thead>
           <tbody>
             {items?.map((item) => (
-              <ItemProduct
-                key={item.id}
-                item={item}
-                onToggleActive={handleToggleActive}
-              />
+              <tr key={item.id}>
+                <td>{item.active ? "Active" : "Disabled"}</td>
+                <td>{item.nameEn}</td>
+                <td>{item.nameEs}</td>
+                <td>
+                  {item.sections
+                    ?.map((menuSection) => menuSection.nameEn)
+                    .join(", ")}
+                </td>
+              </tr>
             ))}
           </tbody>
         </Table>
@@ -83,4 +78,4 @@ const Products = () => {
     </>
   );
 };
-export default Products;
+export default Menus;

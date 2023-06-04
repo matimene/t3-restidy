@@ -9,12 +9,12 @@ import { Reload } from "tabler-icons-react";
 import { TABLES_SORT_BY } from "./helper";
 import { TablesModals } from "./Modals";
 import { TableCardItem, TableItem } from "./TableItem";
+import { Row } from "~/components/Primary";
 
 type TableWithPtable = RouterOutputs["tables"]["getAll"][number];
 
 const useStyles = createStyles((theme) => ({
   container: {
-    flex: 1,
     width: "100%",
     display: "flex",
     flexWrap: "wrap",
@@ -23,13 +23,11 @@ const useStyles = createStyles((theme) => ({
     gap: rem(12),
   },
   filterContainer: {
-    flex: 1,
     width: "100%",
     display: "flex",
-    padding: theme.spacing.xs,
     gap: rem(12),
-    justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
+    flexDirection: "column",
   },
 }));
 
@@ -66,19 +64,23 @@ const Tables = () => {
   return (
     <>
       <div className={classes.filterContainer}>
-        <Select
-          label="Sort by"
-          data={TABLES_SORT_BY}
-          value={sortBy}
-          onChange={(value: string) => setSortBy(value)}
-        />
-        <Button onClick={() => setSeeAsCards((curr) => !curr)}>
-          See as {seeAsCards ? "table" : "cards"}
-        </Button>
-        <Button onClick={() => void ctx.tables.getAll.invalidate()}>
-          <Reload size={24} strokeWidth={2} color={"white"} />
-        </Button>
-        <Button onClick={openForm}>Create new</Button>
+        <Row gap={12} align="flex-end">
+          <Select
+            label="Sort by"
+            data={TABLES_SORT_BY}
+            value={sortBy}
+            onChange={(value: string) => setSortBy(value)}
+          />
+          <Button onClick={() => void ctx.tables.getAll.invalidate()}>
+            <Reload size={24} strokeWidth={1.5} color={"white"} />
+          </Button>
+        </Row>
+        <Row gap={12}>
+          <Button onClick={() => setSeeAsCards((curr) => !curr)}>
+            See as {seeAsCards ? "table" : "cards"}
+          </Button>
+          <Button onClick={openForm}>Create new</Button>
+        </Row>
       </div>
       <div className={classes.container}>
         {seeAsCards ? (

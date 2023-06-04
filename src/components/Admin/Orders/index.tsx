@@ -11,10 +11,10 @@ import {
   ORDERS_STATUS_OPTIONS,
 } from "./helper";
 import { Reload } from "tabler-icons-react";
+import { Row } from "~/components/Primary";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    flex: 1,
     width: "100%",
     display: "flex",
     flexWrap: "wrap",
@@ -22,13 +22,10 @@ const useStyles = createStyles((theme) => ({
     gap: rem(12),
   },
   filterContainer: {
-    flex: 1,
-    width: "100%",
     display: "flex",
-    padding: theme.spacing.xs,
     gap: rem(12),
-    justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
+    flexDirection: "column",
   },
 }));
 
@@ -61,33 +58,36 @@ const Orders = () => {
   return (
     <>
       <div className={classes.filterContainer}>
-        <MultiSelect
-          value={validStatus}
-          onChange={setValidStatus}
-          data={ORDERS_STATUS_OPTIONS}
-          label="Show only status"
-          placeholder="Orders statuses"
-        />
-        <Select
-          label="Show only table"
-          placeholder="Pick one"
-          data={TABLES_OPTIONS}
-          clearable
-          value={selectedTableId}
-          onChange={(value: string) => setSelectedTableId(value)}
-        />
-        <Select
-          label="Sort by"
-          data={ORDERS_SORTBY_OPTIONS}
-          value={sortBy}
-          onChange={(value: string) => setSortBy(value)}
-        />
-        <Button
-          disabled={isLoading}
-          onClick={() => void ctx.orders.getAll.invalidate()}
-        >
-          <Reload size={24} strokeWidth={2} color={"white"} />
-        </Button>
+        <Row align="flex-end" gap={12}>
+          <Select
+            label="Show only table"
+            placeholder="Pick one"
+            data={TABLES_OPTIONS}
+            clearable
+            value={selectedTableId}
+            onChange={(value: string) => setSelectedTableId(value)}
+          />
+          <Select
+            label="Sort by"
+            data={ORDERS_SORTBY_OPTIONS}
+            value={sortBy}
+            onChange={(value: string) => setSortBy(value)}
+          />
+          <Button
+            disabled={isLoading}
+            onClick={() => void ctx.orders.getAll.invalidate()}
+          >
+            <Reload size={24} strokeWidth={1.5} color={"white"} />
+          </Button>
+        </Row>
+        <div style={{ width: rem(504) }}>
+          <MultiSelect
+            value={validStatus}
+            onChange={setValidStatus}
+            data={ORDERS_STATUS_OPTIONS}
+            placeholder="Orders statuses"
+          />
+        </div>
       </div>
       <div className={classes.container}>
         {orders?.map((order) => (

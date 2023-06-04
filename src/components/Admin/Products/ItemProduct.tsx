@@ -1,5 +1,7 @@
-import { Image, rem, Button } from "@mantine/core";
+import { Image, rem, Button, Text } from "@mantine/core";
 import { type Item } from "@prisma/client";
+import { Edit } from "tabler-icons-react";
+import { ActionsContainer, TwoLineLable } from "~/components/Primary";
 
 const ItemProduct = ({
   item,
@@ -31,17 +33,26 @@ const ItemProduct = ({
       <td>{item.sku}</td>
       <td>{item?.titleEn}</td>
       <td>{item?.titleEs}</td>
-      <td>{item?.descriptionEn}</td>
-      <td>{item?.descriptionEs}</td>
+      <td>
+        <TwoLineLable>{item?.descriptionEn}</TwoLineLable>
+      </td>
+      <td>
+        <TwoLineLable>{item?.descriptionEs}</TwoLineLable>
+      </td>
       <td>{item?.categoryCodes}</td>
       <td>
-        <Button
-          onClick={onToggleActive}
-          color={item?.active ? "orange" : "green"}
-          style={{ minWidth: rem(100) }}
-        >
-          {item?.active ? "Disable" : "Enable"}
-        </Button>
+        <ActionsContainer>
+          <Button onClick={() => window.alert("edit")}>
+            <Edit size={24} strokeWidth={1.5} color={"white"} />
+          </Button>
+          <Button
+            onClick={onToggleActive}
+            color={item?.active ? "red" : "green"}
+            style={{ minWidth: rem(100) }}
+          >
+            {item?.active ? "Disable" : "Enable"}
+          </Button>
+        </ActionsContainer>
       </td>
     </tr>
   );

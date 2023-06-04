@@ -10,6 +10,10 @@ export const categoriesRouter = createTRPCRouter({
     const storeId = ctx.store?.id;
     const categories = await ctx.prisma.category.findMany({
       where: { storeId },
+      include: {
+        parentCategory: true,
+        subCategories: true,
+      },
     });
     return categories;
   }),
@@ -25,7 +29,7 @@ export const categoriesRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const storeId = ctx.store?.id as number;
+      const storeId = ctx.store?.id;
 
       await ctx.prisma.category.create({
         data: {

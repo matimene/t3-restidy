@@ -1,13 +1,32 @@
-import { createStyles, Select, rem, Button, Table } from "@mantine/core";
+import { createStyles, Select, rem, Button, Table, Text } from "@mantine/core";
 import { api } from "~/utils/api";
-import { LoadingSpinner } from "../../Primary/LoadingSpinner";
+import { LoadingSpinner } from "../Primary/LoadingSpinner";
 import { useState } from "react";
-import ItemProduct from "./ItemProduct";
-import { PRODUCTS_SORT_BY } from "./helper";
 import { Reload } from "tabler-icons-react";
+import { Row } from "~/components/Primary";
+
+export const P_TABLES_SORT_BY = [
+  {
+    value: "active",
+    label: "Status",
+  },
+  {
+    value: "titleEn",
+    label: "Title ENG",
+  },
+  {
+    value: "titleEs",
+    label: "Title ESP",
+  },
+  {
+    value: "sku",
+    label: "SKU",
+  },
+];
 
 const useStyles = createStyles((theme) => ({
   container: {
+    flex: 1,
     width: "100%",
     display: "flex",
     flexWrap: "wrap",
@@ -15,22 +34,22 @@ const useStyles = createStyles((theme) => ({
     gap: rem(12),
   },
   filterContainer: {
+    flex: 1,
     width: "100%",
     display: "flex",
+    padding: theme.spacing.xs,
     gap: rem(12),
     justifyContent: "center",
     alignItems: "flex-end",
   },
 }));
 
-const Products = () => {
+const PhysicalTables = () => {
   const { classes } = useStyles();
   const [sortBy, setSortBy] = useState<string>("active");
 
   const ctx = api.useContext();
-  const { data: items, isLoading } = api.items.getAll.useQuery({
-    sortBy,
-  });
+  const { data: items, isLoading } = api.physicalTables.getAll.useQuery();
 
   const handleToggleActive = () => {
     console.log("go");
@@ -40,10 +59,13 @@ const Products = () => {
 
   return (
     <>
+      <Row align="center" justify="center">
+        <Text>Physical Tables</Text>
+      </Row>
       <div className={classes.filterContainer}>
         <Select
           label="Sort by"
-          data={PRODUCTS_SORT_BY}
+          data={P_TABLES_SORT_BY}
           value={sortBy}
           onChange={(value: string) => setSortBy(value)}
         />
@@ -58,24 +80,18 @@ const Products = () => {
         <Table>
           <thead>
             <tr>
-              <th>Image</th>
-              <th>Status</th>
-              <th>Sku</th>
-              <th>Title (ENG)</th>
-              <th>Title (SPA)</th>
-              <th>Description (ENG)</th>
-              <th>Description (SPA)</th>
-              <th>Categories</th>
+              <th>Active</th>
+              <th>Name</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {items?.map((item) => (
-              <ItemProduct
-                key={item.id}
-                item={item}
-                onToggleActive={handleToggleActive}
-              />
+              <tr key={item.id}>
+                <td>{item.active ? "Active" : "Disabled"}</td>
+                <td>{item.name}</td>
+                <td>Actions</td>
+              </tr>
             ))}
           </tbody>
         </Table>
@@ -83,4 +99,4 @@ const Products = () => {
     </>
   );
 };
-export default Products;
+export default PhysicalTables;

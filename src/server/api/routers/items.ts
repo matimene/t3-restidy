@@ -14,14 +14,15 @@ export const itemsRouter = createTRPCRouter({
           skip: z.number().optional(),
         })
         .optional()
+        .default({ skip: 0, sortBy: "titleEn" })
     )
     .query(async ({ ctx, input }) => {
       const storeId = ctx.store?.id;
       const items = await ctx.prisma.item.findMany({
         take: 18,
-        skip: input?.skip ?? 0,
+        skip: input?.skip,
         orderBy: {
-          [input?.sortBy ?? "titleEn"]: "asc",
+          [input?.sortBy]: "asc",
         },
         where: { storeId, active: true },
       });

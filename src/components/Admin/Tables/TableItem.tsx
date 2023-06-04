@@ -1,6 +1,6 @@
 import { Text, rem, Button, Card, Badge } from "@mantine/core";
 import { type RouterOutputs } from "~/utils/api";
-import { Qrcode as QrIcon } from "tabler-icons-react";
+import { Qrcode as QrIcon, Trash } from "tabler-icons-react";
 import { Row } from "~/components/Primary";
 
 type TableWithPtable = RouterOutputs["tables"]["getAll"][number];
@@ -66,18 +66,20 @@ export const TableItem = ({
           }}
         />
       </td>
-      <td>{table?.open ? "open" : "closed"}</td>
+      <td>{table?.open ? "Open" : "Closed"}</td>
       <td>{table?.pTable?.name}</td>
       <td>{table?.identifier}</td>
       <td>{table?.discount}%</td>
       <td style={{ display: "flex", gap: 12 }}>
-        <Button>Delete</Button>
         <Button
           onClick={onToggleOpen}
-          color={table?.open ? "orange" : "green"}
+          color={table?.open ? "black" : "green"}
           style={{ minWidth: rem(100) }}
         >
           {table?.open ? "Close" : "Re-open"}
+        </Button>
+        <Button color="red">
+          <Trash size={24} strokeWidth={1.5} color={"white"} />
         </Button>
       </td>
     </tr>

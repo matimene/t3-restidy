@@ -35,15 +35,18 @@ model MenuSections {
 }
 
 model Category {
-  id       Int     @id @default(autoincrement())
-  storeId  Int
-  code     String  @unique
-  order    Int     @default(0)
-  parentId Int?
-  nameEn   String? @db.VarChar(255)
-  nameEs   String? @db.VarChar(255)
+  id             Int        @id @default(autoincrement())
+  storeId        Int
+  code           String     @unique
+  order          Int        @default(0)
+  parentId       Int?
+  nameEn         String?    @db.VarChar(255)
+  nameEs         String?    @db.VarChar(255)
+  parentCategory Category?  @relation("CategoryToCategory", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subCategories  Category[] @relation("CategoryToCategory")
 
   @@index([storeId])
+  @@index([parentId])
 }
 
 model Item {

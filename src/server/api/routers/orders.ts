@@ -6,12 +6,6 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
-const NewOrderItem = z.object({
-  itemId: z.number(),
-  qty: z.number(),
-  notes: z.string().optional(),
-});
-
 export const ordersRouter = createTRPCRouter({
   getAll: publicProcedure
     .input(
@@ -93,7 +87,13 @@ export const ordersRouter = createTRPCRouter({
     .input(
       z.object({
         token: z.string().min(5),
-        items: z.array(NewOrderItem),
+        items: z.array(
+          z.object({
+            itemId: z.number(),
+            qty: z.number(),
+            notes: z.string().optional(),
+          })
+        ),
       })
     )
     .mutation(async ({ ctx, input }) => {

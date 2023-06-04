@@ -42,6 +42,7 @@ const ItemProduct = ({
         <TwoLineLable>{item?.descriptionEs}</TwoLineLable>
       </td>
       <td>{item?.categoryCodes}</td>
+      <td>{item?.price}</td>
       <td>
         <ActionsContainer>
           <Button onClick={onEdit}>

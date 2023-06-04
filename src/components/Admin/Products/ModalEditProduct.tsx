@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { type Item } from "@prisma/client";
 import { Row } from "~/components/Primary";
-import { Reload } from "tabler-icons-react";
 
 const ModalEditProduct = ({
   itemId,
@@ -21,8 +20,8 @@ const ModalEditProduct = ({
     });
   const [newBody, setNewBody] = useState<Item>();
 
-  const { mutate: editItem, isLoading: isEditing } = api.items.edit.useMutation(
-    {
+  const { mutate: editItem, isLoading: isLoadingMutation } =
+    api.items.edit.useMutation({
       onSuccess: (updatedProduct) => {
         setNewBody(updatedProduct);
         void ctx.items.getAll.invalidate();
@@ -32,8 +31,7 @@ const ModalEditProduct = ({
         const errorMessage = e.data?.zodError;
         window.alert(errorMessage);
       },
-    }
-  );
+    });
 
   useEffect(() => {
     setNewBody(product);
@@ -52,7 +50,7 @@ const ModalEditProduct = ({
   return (
     <Modal opened={isOpen} onClose={onClose} title="Edit product" centered>
       <LoadingOverlay
-        visible={isLoadingProduct}
+        visible={isLoadingProduct || isLoadingMutation}
         overlayBlur={2}
         transitionDuration={500}
       />
@@ -108,12 +106,12 @@ const ModalEditProduct = ({
         }
       />
       <Row justify="center" marginTop={12}>
-        <Button uppercase disabled={isEditing} onClick={handleEditProduct}>
-          {isEditing ? (
-            <Reload size={24} strokeWidth={1.5} color={"white"} />
-          ) : (
-            "Save"
-          )}
+        <Button
+          uppercase
+          disabled={isLoadingMutation}
+          onClick={handleEditProduct}
+        >
+          Save
         </Button>
       </Row>
     </Modal>

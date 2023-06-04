@@ -126,7 +126,17 @@ function AdminHeader({ links }: HeaderSearchProps) {
     <Header height={56} className={classes.header}>
       <Container>
         <div className={classes.inner}>
-          <MoodSmileDizzy size={28} />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              fontWeight: 600,
+            }}
+          >
+            <MoodSmileDizzy size={28} />
+            RESTIDY
+          </div>
           <Group spacing={5} className={classes.links}>
             {items}
             <div

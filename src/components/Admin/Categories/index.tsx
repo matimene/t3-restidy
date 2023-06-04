@@ -4,6 +4,8 @@ import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import { useState } from "react";
 import { Edit, Reload, Trash } from "tabler-icons-react";
 import { Row } from "~/components/Primary";
+import { useDisclosure } from "@mantine/hooks";
+import ModalEditCategory from "./ModalEditCategory";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -26,9 +28,10 @@ const useStyles = createStyles((theme) => ({
 const Categories = () => {
   const { classes } = useStyles();
   const [sortBy, setSortBy] = useState<string>("active");
-
   const ctx = api.useContext();
   const { data: items, isLoading } = api.categories.getAll.useQuery();
+  const [opened, { open, close }] = useDisclosure(false);
+  const [editCategoryId, setEditCategoryId] = useState<number | undefined>();
 
   const handleToggleActive = () => {
     console.log("go");
@@ -82,7 +85,10 @@ const Categories = () => {
                 <td style={{ display: "flex", gap: 12 }}>
                   <Button
                     disabled={isLoading}
-                    onClick={() => void ctx.orders.getAll.invalidate()}
+                    onClick={() => {
+                      setEditCategoryId(item.id);
+                      open();
+                    }}
                   >
                     <Edit size={24} strokeWidth={1.5} color={"white"} />
                   </Button>
@@ -99,6 +105,13 @@ const Categories = () => {
           </tbody>
         </Table>
       </div>
+      {editCategoryId && (
+        <ModalEditCategory
+          isOpen={opened}
+          onClose={close}
+          itemId={editCategoryId}
+        />
+      )}
     </>
   );
 };

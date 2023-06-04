@@ -70,6 +70,7 @@ const Products = () => {
               <th>Description (ENG)</th>
               <th>Description (SPA)</th>
               <th>Categories</th>
+              <th>Price</th>
               <th>Actions</th>
             </tr>
           </thead>

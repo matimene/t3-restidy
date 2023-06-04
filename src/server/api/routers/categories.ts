@@ -17,6 +17,18 @@ export const categoriesRouter = createTRPCRouter({
     });
     return categories;
   }),
+  getOne: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const item = await ctx.prisma.category.findUniqueOrThrow({
+        where: { id: input.id },
+      });
+      return item;
+    }),
 
   create: privateProcedure
     .input(
@@ -37,5 +49,28 @@ export const categoriesRouter = createTRPCRouter({
           ...input,
         },
       });
+    }),
+  edit: privateProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        code: z.string(),
+        order: z.number(),
+        parentId: z.number().nullish(),
+        nameEn: z.string().nullish(),
+        nameEs: z.string().nullish(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const updatedCategory = await ctx.prisma.category.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          ...input,
+        },
+      });
+
+      return updatedCategory;
     }),
 });

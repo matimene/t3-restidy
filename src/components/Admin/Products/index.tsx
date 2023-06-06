@@ -7,6 +7,8 @@ import { PRODUCTS_SORT_BY } from "./helper";
 import { Reload } from "tabler-icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import ModalEditProduct from "./ModalEditProduct";
+import ModalNewProduct from "./ModalNewProduct";
+import { Row } from "~/components/Primary";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -19,16 +21,19 @@ const useStyles = createStyles((theme) => ({
   filterContainer: {
     width: "100%",
     display: "flex",
-    gap: rem(12),
+    flexDirection: "column",
     justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
+    gap: rem(12),
   },
 }));
 
 const Products = () => {
   const { classes } = useStyles();
   const [sortBy, setSortBy] = useState<string>("active");
-  const [opened, { open, close }] = useDisclosure(false);
+  const [openedNew, { open: openNew, close: closeNew }] = useDisclosure(false);
+  const [openedEdit, { open: openEdit, close: closeEdit }] =
+    useDisclosure(false);
   const [editProductId, setEditProductId] = useState<number | undefined>();
 
   const ctx = api.useContext();
@@ -45,18 +50,23 @@ const Products = () => {
   return (
     <>
       <div className={classes.filterContainer}>
-        <Select
-          label="Sort by"
-          data={PRODUCTS_SORT_BY}
-          value={sortBy}
-          onChange={(value: string) => setSortBy(value)}
-        />
-        <Button
-          disabled={isLoading}
-          onClick={() => void ctx.orders.getAll.invalidate()}
-        >
-          <Reload size={24} strokeWidth={1.5} color={"white"} />
-        </Button>
+        <Row justify="center" align="flex-end" gap={12}>
+          <Select
+            label="Sort by"
+            data={PRODUCTS_SORT_BY}
+            value={sortBy}
+            onChange={(value: string) => setSortBy(value)}
+          />
+          <Button
+            disabled={isLoading}
+            onClick={() => void ctx.orders.getAll.invalidate()}
+          >
+            <Reload size={24} strokeWidth={1.5} color={"white"} />
+          </Button>
+        </Row>
+        <Row justify="center">
+          <Button onClick={openNew}>New product</Button>
+        </Row>
       </div>
       <div className={classes.container}>
         <Table>
@@ -82,7 +92,7 @@ const Products = () => {
                 onToggleActive={handleToggleActive}
                 onEdit={() => {
                   setEditProductId(item.id);
-                  open();
+                  openEdit();
                 }}
               />
             ))}
@@ -91,11 +101,12 @@ const Products = () => {
       </div>
       {editProductId && (
         <ModalEditProduct
-          isOpen={opened}
-          onClose={close}
+          isOpen={openedEdit}
+          onClose={closeEdit}
           itemId={editProductId}
         />
       )}
+      {openedNew && <ModalNewProduct isOpen={openedNew} onClose={closeNew} />}
     </>
   );
 };

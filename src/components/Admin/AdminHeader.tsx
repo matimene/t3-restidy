@@ -68,6 +68,12 @@ const useStyles = createStyles((theme) => ({
     textTransform: "capitalize",
     cursor: "pointer",
   },
+
+  menu: {
+    [".mantine-Menu-dropdown"]: {
+      zIndex: 100,
+    },
+  },
 }));
 
 interface HeaderSearchProps {
@@ -95,6 +101,7 @@ function AdminHeader({ links }: HeaderSearchProps) {
     ));
 
     if (menuItems) {
+      //TODO: dropdown should have zindex 100 so it doesnt go over header
       return (
         <Menu
           key={link.label}
@@ -123,7 +130,7 @@ function AdminHeader({ links }: HeaderSearchProps) {
   });
 
   return (
-    <Header height={56} className={classes.header}>
+    <Header height={56} className={classes.header} style={{ zIndex: 101 }}>
       <Container>
         <div className={classes.inner}>
           <div

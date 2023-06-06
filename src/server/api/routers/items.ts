@@ -46,14 +46,14 @@ export const itemsRouter = createTRPCRouter({
       z.object({
         price: z.number(),
         sku: z.string(),
-        img: z.string().optional(),
-        categoryCodes: z.string().optional(),
-        descriptionEn: z.string().optional(),
-        descriptionEs: z.string().optional(),
-        titleEn: z.string().optional(),
-        titleEs: z.string().optional(),
-        tagsEn: z.string().optional(),
-        tagsEs: z.string().optional(),
+        img: z.string().nullish(),
+        categoryCodes: z.string().nullish(),
+        descriptionEn: z.string().nullish(),
+        descriptionEs: z.string().nullish(),
+        titleEn: z.string().nullish(),
+        titleEs: z.string().nullish(),
+        tagsEn: z.string().nullish(),
+        tagsEs: z.string().nullish(),
       })
     )
     .mutation(async ({ ctx, input }) => {

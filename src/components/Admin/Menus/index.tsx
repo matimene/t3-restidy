@@ -1,7 +1,7 @@
 import { createStyles, rem, Button, Table, Text, Popover } from "@mantine/core";
 import { api } from "~/utils/api";
 import { Edit, Reload } from "tabler-icons-react";
-import { ActionsContainer, Row } from "~/components/Primary";
+import { Row } from "~/components/Primary";
 import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
 import { useDisclosure } from "@mantine/hooks";
 import ModalEditMenu from "./ModalEditMenu";
@@ -116,21 +116,19 @@ const Menus = () => {
                       (menuSection) =>
                         `${menuSection?.nameEn ?? ""} (${
                           menuSection?.itemIds?.split(";")?.length ?? 0
-                        })`
+                        }U)`
                     )
-                    .join(", ") || "NONE"}
+                    .join(", ") || "-"}
                 </td>
                 <td>
-                  <ActionsContainer>
-                    <Button onClick={() => handleEditMenu(item.id)}>
-                      <Edit size={24} strokeWidth={1.5} color={"white"} />
-                      Menu
-                    </Button>
-                    <Button onClick={() => handleEditSections(item.id)}>
-                      <Edit size={24} strokeWidth={1.5} color={"white"} />
-                      Sections
-                    </Button>
-                  </ActionsContainer>
+                  <Button onClick={() => handleEditMenu(item.id)} mr={12}>
+                    <Edit size={24} strokeWidth={1.5} color={"white"} />
+                    Menu
+                  </Button>
+                  <Button onClick={() => handleEditSections(item.id)}>
+                    <Edit size={24} strokeWidth={1.5} color={"white"} />
+                    Sections
+                  </Button>
                 </td>
               </tr>
             ))}

@@ -10,7 +10,13 @@ export const menusRouter = createTRPCRouter({
     const storeId = ctx.store?.id;
     const menus = await ctx.prisma.menu.findMany({
       where: { storeId },
-      include: { sections: true },
+      include: {
+        sections: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+      },
     });
     return menus;
   }),
@@ -92,6 +98,17 @@ export const menusRouter = createTRPCRouter({
         data: {
           ...input,
         },
+      });
+    }),
+  deleteSection: privateProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.menuSections.delete({
+        where: { id: input.id },
       });
     }),
 });

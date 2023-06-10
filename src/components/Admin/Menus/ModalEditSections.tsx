@@ -11,7 +11,8 @@ import { type RouterOutputs, api } from "~/utils/api";
 import { Row } from "~/components/Primary";
 import { type MenuSections } from "@prisma/client";
 import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
-import { Edit } from "tabler-icons-react";
+import { Edit, Trash } from "tabler-icons-react";
+import { toast } from "react-hot-toast";
 
 type MenuWithSections = RouterOutputs["menus"]["getAll"][number];
 type NewMenuSections = Omit<MenuSections, "id"> & { id?: number };
@@ -20,10 +21,12 @@ const Section = ({
   item,
   isNew,
   onEdit,
+  onDelete,
 }: {
   item: MenuSections | NewMenuSections;
   isNew: boolean;
   onEdit(section: MenuSections | NewMenuSections): void;
+  onDelete(): void;
 }) => {
   const [isEditingProps, setIsEditingProps] = useState(isNew);
   const itemIds = item?.itemIds?.split(";") || [];
@@ -38,6 +41,35 @@ const Section = ({
   const handleEditField = (key: string, value: any) =>
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     onEdit({ ...item, [key]: value });
+
+  const handlePopDeleteToast = () => {
+    toast(
+      (t) => (
+        <div>
+          <div style={{ textAlign: "center" }}>
+            Are you sure you want to delete section{" "}
+            <b>{item.nameEn?.toUpperCase()}</b>
+          </div>
+          <Row gap={12} justify="center" marginTop={12}>
+            <Button onClick={() => toast.dismiss(t.id)}>Cancel</Button>
+            <Button
+              onClick={() => {
+                onDelete();
+                toast.dismiss(t.id);
+              }}
+              color="red"
+            >
+              Delete
+            </Button>
+          </Row>
+        </div>
+      ),
+      {
+        position: "top-center",
+        duration: 60000,
+      }
+    );
+  };
 
   if (!productsData || isLoadingProducts) return <LoadingSpinner />;
 
@@ -54,6 +86,11 @@ const Section = ({
           </Text>
           <Edit />
         </Button>
+        {!isNew && (
+          <Button compact onClick={handlePopDeleteToast} color="red">
+            <Trash size={20} />
+          </Button>
+        )}
       </Row>
       {isEditingProps && (
         <div style={{ marginBottom: 12 }}>
@@ -130,6 +167,15 @@ const ModalEditSections = ({
       window.alert(errorMessage);
     },
   });
+  const { mutate: deleteSection } = api.menus.deleteSection.useMutation({
+    onSuccess: () => {
+      void ctx.menus.getAll.invalidate();
+    },
+    onError: (e) => {
+      const errorMessage = e.data?.zodError;
+      window.alert(errorMessage);
+    },
+  });
 
   const handleAddSection = () =>
     setMenuSections((curr) => [
@@ -187,6 +233,7 @@ const ModalEditSections = ({
           onEdit={(section: MenuSections | NewMenuSections) =>
             handleEditSection(section, index)
           }
+          onDelete={() => section?.id && deleteSection({ id: section.id })}
         />
       ))}
       <Row justify="center" marginTop={24} gap={12}>

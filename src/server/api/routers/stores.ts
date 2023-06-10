@@ -28,7 +28,7 @@ export const storesRouter = createTRPCRouter({
         message: "Categories not found",
       });
 
-    return { menus, categories };
+    return { menus, categories, store: ctx.store };
   }),
 
   loadMenusAndCats: publicProcedure

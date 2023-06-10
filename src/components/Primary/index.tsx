@@ -36,6 +36,9 @@ export const ActionsContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 12px;
+  @media only screen and (max-width: 1080px) {
+    flex-wrap: wrap;
+  }
 `;
 
 export const TwoLineLable = styled.div`

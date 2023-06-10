@@ -14,8 +14,7 @@ const ItemProduct = ({
 }) => {
   return (
     <tr style={{ opacity: item.active ? 1 : 0.7 }}>
-      <td>{item.sku}</td>
-      <td>{item.active ? "active" : "disabled"}</td>
+      <td style={{ fontSize: 12, fontWeight: 500 }}>{item.sku}</td>
       <td>
         {item?.img ? (
           <Image

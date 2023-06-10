@@ -73,7 +73,6 @@ const Products = () => {
           <thead>
             <tr>
               <th>Sku</th>
-              <th>Status</th>
               <th>Image</th>
               <th>Title (ENG)</th>
               <th>Title (SPA)</th>

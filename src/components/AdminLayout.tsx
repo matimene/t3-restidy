@@ -10,7 +10,10 @@ interface LayoutProps {
 const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
   main: {
     position: "relative",
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url(${bgUrl})`,
+    backgroundImage:
+      theme.colorScheme === "dark"
+        ? `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url(${bgUrl})`
+        : `linear-gradient(rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.9) 100%), url(${bgUrl})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",

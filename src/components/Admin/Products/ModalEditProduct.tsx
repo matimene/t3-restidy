@@ -20,7 +20,7 @@ const ModalEditProduct = ({
 
   const { mutate: editItem, isLoading: isLoadingMutation } =
     api.items.edit.useMutation({
-      onSuccess: (updatedProduct) => {
+      onSuccess: () => {
         void ctx.items.getAll.invalidate();
         onClose();
       },

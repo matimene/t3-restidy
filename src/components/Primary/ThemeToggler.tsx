@@ -8,8 +8,8 @@ export default function ThemeToggler() {
 
   return (
     <ActionIcon
-      variant="outline"
-      color={dark ? "yellow" : "blue"}
+      variant="filled"
+      color={dark ? "blue.6" : "dark.4"}
       onClick={() => toggleColorScheme()}
       title="Toggle color scheme"
     >

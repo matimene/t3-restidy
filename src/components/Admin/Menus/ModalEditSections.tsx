@@ -111,6 +111,13 @@ const Section = ({
             />
           </Row>
           <TextInput
+            label="Slug"
+            value={item?.slug ?? ""}
+            onChange={({ target }) =>
+              handleEditField("slug", target?.value || "")
+            }
+          />
+          <TextInput
             label="Name (ENG)"
             value={item?.nameEn ?? ""}
             onChange={({ target }) =>
@@ -183,6 +190,7 @@ const ModalEditSections = ({
       {
         nameEn: "New section",
         menuId: id,
+        slug: "new-section",
         order: 99,
         itemIds: "",
         nameEs: "",

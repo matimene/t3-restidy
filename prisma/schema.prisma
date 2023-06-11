@@ -13,25 +13,27 @@ generator client {
 model Menu {
   id       Int            @id @default(autoincrement())
   storeId  Int
+  slug     String         @unique
   active   Boolean        @default(true)
   nameEn   String?        @db.VarChar(255)
   nameEs   String?        @db.VarChar(255)
   sections MenuSections[]
 
-  @@index([storeId])
+  @@index([storeId, slug])
 }
 
 model MenuSections {
   id      Int     @id @default(autoincrement())
   menu    Menu    @relation(fields: [menuId], references: [id])
   menuId  Int
+  slug    String  @unique
   order   Int     @default(0)
   img     String? @db.VarChar(255)
   nameEn  String? @db.VarChar(255)
   nameEs  String? @db.VarChar(255)
   itemIds String? @db.VarChar(500)
 
-  @@index([menuId])
+  @@index([menuId, slug])
 }
 
 model Category {

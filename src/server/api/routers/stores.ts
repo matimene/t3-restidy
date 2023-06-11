@@ -4,6 +4,10 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const storesRouter = createTRPCRouter({
+  getStore: publicProcedure.query(({ ctx }) => {
+    return { store: ctx.store };
+  }),
+
   loadDataByCode: publicProcedure.query(async ({ ctx }) => {
     const storeId = ctx.store?.id;
 

@@ -49,3 +49,16 @@ export const TwoLineLable = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
+
+export const Centered = styled.div`
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const SmtWrong = () => <Centered>Something went wrong</Centered>;

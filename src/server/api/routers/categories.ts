@@ -17,6 +17,7 @@ export const categoriesRouter = createTRPCRouter({
     });
     return categories;
   }),
+
   getOne: publicProcedure
     .input(
       z.object({

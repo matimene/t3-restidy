@@ -74,6 +74,11 @@ const ModalEditMenu = ({
         </Group>
       </Chip.Group>
       <TextInput
+        label="Slug"
+        value={newBody?.slug ?? ""}
+        onChange={({ target }) => handleEditField("slug", target?.value || "")}
+      />
+      <TextInput
         label="Name (ENG)"
         value={newBody?.nameEn ?? ""}
         onChange={({ target }) =>

@@ -28,6 +28,29 @@ export const itemsRouter = createTRPCRouter({
       });
       return items;
     }),
+  getByIds: publicProcedure
+    .input(
+      z.object({
+        sortBy: z.string().optional(),
+        skip: z.number().optional(),
+        ids: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const storeId = ctx.store?.id;
+      const { skip = 0, sortBy = "titleEn", ids } = input;
+      const productIds = ids.split(";").map((id) => parseInt(id));
+
+      const items = await ctx.prisma.item.findMany({
+        take: 18,
+        skip: skip,
+        orderBy: {
+          [sortBy]: "asc",
+        },
+        where: { storeId, active: true, id: { in: productIds } },
+      });
+      return items;
+    }),
   getOne: publicProcedure
     .input(
       z.object({

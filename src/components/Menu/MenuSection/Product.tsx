@@ -5,22 +5,23 @@ import {
   Modal,
   Button,
   NumberInput,
+  Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { type Item } from "@prisma/client";
 import { getProductLocaleProps } from "~/utils/helpers";
-import styled from "@emotion/styled";
 import useMobileDetection from "~/utils/hooks/useMobileDetection";
-import { type CartItem } from "~/components/Menu2/helper";
 import { Row } from "~/components/Primary";
 import NumericInput from "~/components/Primary/NumericInput";
+import useStore, { type CartItem } from "~/utils/zustand-store";
 
 const useStyles = createStyles((theme) => ({
   container: {
     display: "flex",
     alignItems: "center",
     borderBottom: `1px dashed ${theme.colors.gray[7]};`,
-    padding: theme.spacing.xs,
+    paddingBottom: theme.spacing.xs,
+    paddingTop: theme.spacing.xs,
     width: "100%",
     height: "100%",
     minWidth: rem(350),
@@ -34,44 +35,18 @@ const useStyles = createStyles((theme) => ({
     width: rem(120),
     marginRight: theme.spacing.xs,
   },
-  dataWrapper: {
-    height: "100%",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 600,
-    color: "white",
-  },
-  desc: {},
-  price: {
-    fontSize: 24,
-    color: theme.colors.yellow[6],
-    textAlign: "right",
-  },
 }));
-
-const ActionsContainer = styled.div`
-  maxheight: ${rem(36)};
-  display: flex;
-  justifycontent: center;
-  alignitems: center;
-
-  .mantine-Group-root {
-    flex-wrap: nowrap;
-  }
-`;
 
 const Product = ({
   item,
-  onAddToCart,
   itemInCart,
 }: {
-  itemInCart: CartItem | undefined;
   item: Item;
-  onAddToCart?: (cartItem: any) => void;
+  itemInCart?: CartItem;
 }) => {
   const { isMobile } = useMobileDetection();
   const { classes } = useStyles();
+  const { dispatch } = useStore();
   const [opened, { open, close }] = useDisclosure(false);
 
   const { title, description } = getProductLocaleProps<Item>({
@@ -79,13 +54,21 @@ const Product = ({
     keys: ["title", "description"],
   });
 
-  const handleEditCart = ({ qty, notes }: { qty: number; notes?: string }) => {
+  const handleEditCart = ({
+    quantity,
+    notes,
+  }: {
+    quantity: number;
+    notes?: string;
+  }) => {
+    if (quantity === 0) return dispatch.deleteCartItem(item.id);
+
     const cartItem = {
       itemId: item.id,
-      qty,
+      quantity,
       notes,
     };
-    onAddToCart && onAddToCart(cartItem);
+    dispatch.editCartItem(cartItem);
   };
 
   return (
@@ -100,7 +83,7 @@ const Product = ({
                   minHeight: rem(120),
                 },
               }}
-              miw={120}
+              miw={100}
               radius="md"
               fit="cover"
               src={item.img}
@@ -114,45 +97,47 @@ const Product = ({
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
+            width: "100%",
           }}
         >
-          <div>
-            {title && <div className={classes.title}>{title}</div>}
-            {description && <div className={classes.desc}>{description}</div>}
-          </div>
-          {item?.price && (
-            <Row justify="space-between" align="center" marginTop={12}>
-              <div className={classes.price}>€{item?.price}</div>
-              {onAddToCart && (
-                <ActionsContainer>
-                  {!!itemInCart ? (
-                    isMobile() ? (
-                      <NumericInput
-                        value={itemInCart.qty}
-                        setValue={(qty) => handleEditCart({ qty })}
-                      />
-                    ) : (
-                      <NumberInput
-                        value={itemInCart.qty}
-                        onChange={(qty: number) => handleEditCart({ qty })}
-                        placeholder="Quantity"
-                        min={1}
-                        style={{ maxWidth: 100 }}
-                      />
-                    )
-                  ) : (
-                    <Button
-                      variant="outline"
-                      color="yellow"
-                      onClick={() => handleEditCart({ qty: 1 })}
-                    >
-                      Add to cart
-                    </Button>
-                  )}
-                </ActionsContainer>
-              )}
-            </Row>
-          )}
+          <Row align="center" justify="space-between" mb={6}>
+            <Text transform="uppercase" weight={700} size={16}>
+              {title}
+            </Text>
+            <Text weight={700} size={16} color="yellow.6">
+              {item?.price}€
+            </Text>
+          </Row>
+          <Text transform="capitalize" size={14}>
+            {description}
+          </Text>
+          <Row justify="flex-end" align="center" style={{ minHeight: 36 }}>
+            {!!itemInCart ? (
+              isMobile() ? (
+                <NumericInput
+                  value={itemInCart.quantity}
+                  setValue={(quantity) => handleEditCart({ quantity })}
+                />
+              ) : (
+                <NumberInput
+                  value={itemInCart.quantity}
+                  onChange={(quantity: number) => handleEditCart({ quantity })}
+                  placeholder="Quantity"
+                  min={1}
+                  style={{ maxWidth: 100 }}
+                />
+              )
+            ) : (
+              <Button
+                variant="gradient"
+                gradient={{ from: "yellow.4", to: "yellow.8", deg: 90 }}
+                compact
+                onClick={() => handleEditCart({ quantity: 1 })}
+              >
+                +
+              </Button>
+            )}
+          </Row>
         </div>
       </div>
       <Modal
@@ -169,6 +154,13 @@ const Product = ({
           src={item.img}
           alt={item.sku}
           styles={{ image: { minHeight: 300 } }}
+        />
+        <NumericInput
+          showDecrement={false}
+          value={itemInCart?.quantity || 0}
+          setValue={(quantity) => handleEditCart({ quantity })}
+          style={{ position: "absolute", bottom: 12, right: 12 }}
+          mainInputStyle={{ backgroundColor: "#000000D9" }}
         />
       </Modal>
     </>

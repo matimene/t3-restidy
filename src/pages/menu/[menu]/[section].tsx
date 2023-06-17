@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { SmtWrong } from "~/components/Primary";
 import MenuSection from "~/components/Menu/MenuSection";
 import SectionsHeader from "~/components/Menu/SectionsHeader";
+import MenuNavbar from "~/components/Menu/MenuNavbar";
 
 const MenuSectionPage: NextPage = ({ store }: { store?: Store }) => {
   const router = useRouter();
@@ -32,7 +33,8 @@ const MenuSectionPage: NextPage = ({ store }: { store?: Store }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
-        <SectionsHeader menu={selectedMenu} isLoading={isLoading} />
+        <MenuNavbar />
+        <SectionsHeader menu={selectedMenu} />
         <MenuSection section={selectedSection} />
       </PageLayout>
     </>

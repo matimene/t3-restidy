@@ -34,6 +34,12 @@ const MyApp: AppType = ({ Component, pageProps }) => {
               lg: "2.2rem",
               xl: "2.8rem",
             },
+            colors: {
+              gradient: [
+                "linear-gradient(90deg, rgba(255,248,13,1) 0%, rgba(255,158,38,1) 100%)",
+                "linear-gradient(90deg, rgba(255,158,38,1) 0%, rgba(255,248,13,1) 100%)",
+              ],
+            },
           }}
         >
           <Toaster />

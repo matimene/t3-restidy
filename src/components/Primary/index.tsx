@@ -70,3 +70,15 @@ export const Centered = styled.div`
 `;
 
 export const SmtWrong = () => <Centered>Something went wrong</Centered>;
+
+export const GradientDivider = styled.div<{
+  w?: number;
+  mt?: number;
+  gradient?: number;
+}>`
+  width: ${({ w }) => (w ? `${w}px` : "100%")};
+  height: 3px;
+  background: ${({ theme, gradient }) =>
+    gradient ? theme.colors.gradient?.[gradient] : theme.colors.gradient?.[0]};
+  margin-top: ${({ mt }) => (mt ? `${mt}px` : "")};
+`;

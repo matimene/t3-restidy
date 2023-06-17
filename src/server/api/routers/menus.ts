@@ -26,6 +26,7 @@ export const menusRouter = createTRPCRouter({
       z.object({
         nameEn: z.string().nullish().default("New Menu"),
         nameEs: z.string().nullish().default("Nuevo Menu"),
+        slug: z.string().default("new-menu"),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -66,6 +67,7 @@ export const menusRouter = createTRPCRouter({
       z.object({
         menuId: z.number(),
         order: z.number(),
+        slug: z.string(),
         itemIds: z.string().nullish(),
         img: z.string().nullish(),
         nameEn: z.string().nullish(),

@@ -1,19 +1,13 @@
-import { Button, Group, Text, Collapse, Box, Divider } from "@mantine/core";
+import { Text, Collapse, Box } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { type RouterOutputs } from "~/utils/api";
 import { ChevronDown, ChevronUp } from "tabler-icons-react";
-import { Row } from "../Primary";
+import { GradientDivider, Row } from "../Primary";
 import { useRouter } from "next/router";
 
 type MenuWithSections = RouterOutputs["menus"]["getAll"][number];
 
-const SectionsHeader = ({
-  menu,
-  isLoading,
-}: {
-  menu: MenuWithSections;
-  isLoading: boolean;
-}) => {
+const SectionsHeader = ({ menu }: { menu: MenuWithSections }) => {
   const router = useRouter();
   const [opened, { toggle }] = useDisclosure(false);
 
@@ -47,7 +41,7 @@ const SectionsHeader = ({
           </Text>
         ))}
       </Collapse>
-      <Divider size="md" mt={12} />
+      <GradientDivider mt={12} gradient={1} />
     </Box>
   );
 };

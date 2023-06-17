@@ -2,6 +2,7 @@ import { createStyles, rem } from "@mantine/core";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import Product from "./Product";
+import useStore from "~/utils/zustand-store";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -15,7 +16,7 @@ const useStyles = createStyles((theme) => ({
 
 const ProductsList = ({ ids }: { ids: string }) => {
   const { classes } = useStyles();
-  const ctx = api.useContext();
+  const { cart } = useStore();
   const { data: items, isLoading } = api.items.getByIds.useQuery({
     ids,
   });
@@ -25,7 +26,11 @@ const ProductsList = ({ ids }: { ids: string }) => {
   return (
     <div className={classes.container}>
       {items?.map((item) => (
-        <Product item={item} key={item.id} itemInCart={undefined} />
+        <Product
+          item={item}
+          key={item.id}
+          itemInCart={cart.find((cItem) => cItem.itemId === item.id)}
+        />
       ))}
     </div>
   );

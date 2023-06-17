@@ -1,6 +1,7 @@
-import { createStyles, rem } from "@mantine/core";
+import { Text, createStyles } from "@mantine/core";
 import ProductsList from "./ProductsLists";
 import { type MenuSections } from "@prisma/client";
+import { GradientDivider } from "~/components/Primary";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -10,8 +11,8 @@ const useStyles = createStyles((theme) => ({
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-start",
+    alignItems: "center",
     padding: theme.spacing.xs,
-    gap: rem(12),
   },
 }));
 
@@ -21,6 +22,10 @@ const MenuSection = ({ section }: { section: MenuSections }) => {
   return (
     <>
       <div className={classes.container}>
+        <Text size={30} align="center" transform="uppercase">
+          {section?.nameEn}
+        </Text>
+        <GradientDivider w={100} />
         <ProductsList ids={section?.itemIds ?? ""} />
       </div>
     </>

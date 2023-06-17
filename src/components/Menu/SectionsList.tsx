@@ -1,4 +1,4 @@
-import { SimpleGrid, createStyles, rem } from "@mantine/core";
+import { SimpleGrid, Text, createStyles, rem } from "@mantine/core";
 import { type RouterOutputs } from "~/utils/api";
 import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
 import styled from "@emotion/styled";
@@ -27,9 +27,9 @@ const SectionItem = styled.div`
   border: 1px solid white;
   background-color: rgba(0, 0, 0, 0.5);
   cursor: pointer;
-  border-radius: 150px;
-  height: 150px;
-  width: 150px;
+  border-radius: 120px;
+  height: 120px;
+  width: 120px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,14 +53,18 @@ const SectionsList = ({
       <div className={classes.container}>
         <SimpleGrid cols={2}>
           {menu?.sections.map((section) => (
-            <SectionItem
-              key={section.id}
-              onClick={() =>
-                void router.push(`/menu/${menu.slug}/${section.slug}`)
-              }
-            >
-              {section.nameEn}
-            </SectionItem>
+            <div key={section.id}>
+              <SectionItem
+                onClick={() =>
+                  void router.push(`/menu/${menu.slug}/${section.slug}`)
+                }
+              >
+                x
+              </SectionItem>
+              <Text align="center" mt={12} transform="uppercase">
+                {section.nameEn}
+              </Text>
+            </div>
           ))}
         </SimpleGrid>
       </div>

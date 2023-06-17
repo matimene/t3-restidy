@@ -17,6 +17,12 @@ type RowProps = {
   margin?: number | string;
   marginTop?: number | string;
   marginBottom?: number | string;
+  marginLeft?: number | string;
+  marginRight?: number | string;
+  mt?: number | string;
+  mb?: number | string;
+  ml?: number | string;
+  mr?: number | string;
 };
 
 export const Row = styled.div<RowProps>`
@@ -26,8 +32,10 @@ export const Row = styled.div<RowProps>`
   align-items: ${(props) => props.align ?? "flex-start"};
   gap: ${(props) => props.gap ?? 0}px;
   margin: ${(props) => props.margin ?? ""};
-  margin-top: ${(props) => props.marginTop ?? 0}px;
-  margin-bottom: ${(props) => props.marginBottom ?? 0}px;
+  margin-left: ${(props) => (props.ml || props.marginLeft) ?? 0}px;
+  margin-right: ${(props) => (props.mr || props.marginRight) ?? 0}px;
+  margin-top: ${(props) => (props.mt || props.marginTop) ?? 0}px;
+  margin-bottom: ${(props) => (props.mb || props.marginBottom) ?? 0}px;
   max-width: 100%;
 `;
 

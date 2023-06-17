@@ -9,7 +9,7 @@ const useStyles = createStyles((theme) => ({
     flexWrap: "wrap",
     flex: 1,
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: theme.spacing.xs,
     gap: rem(12),
   },

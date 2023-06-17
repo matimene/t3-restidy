@@ -7,6 +7,7 @@ import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
 import { useRouter } from "next/router";
 import { SmtWrong } from "~/components/Primary";
 import MenuSection from "~/components/Menu/MenuSection";
+import SectionsHeader from "~/components/Menu/SectionsHeader";
 
 const MenuSectionPage: NextPage = ({ store }: { store?: Store }) => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const MenuSectionPage: NextPage = ({ store }: { store?: Store }) => {
   );
 
   if (isLoading) return <LoadingSpinner />;
-  if (!selectedSection) return <SmtWrong />;
+  if (!selectedSection || !selectedMenu) return <SmtWrong />;
 
   return (
     <>
@@ -31,6 +32,7 @@ const MenuSectionPage: NextPage = ({ store }: { store?: Store }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
+        <SectionsHeader menu={selectedMenu} isLoading={isLoading} />
         <MenuSection section={selectedSection} />
       </PageLayout>
     </>

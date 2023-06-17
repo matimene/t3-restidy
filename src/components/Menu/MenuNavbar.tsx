@@ -45,13 +45,13 @@ const MenuNavbar = () => {
             }
           >
             <Atom2 size={24} />
-            <Text transform="uppercase" size={10}>
+            <Text transform="uppercase" size={14}>
               Menu
             </Text>
           </ItemContainer>
           <ItemContainer onClick={openCart}>
             <ShoppingCart size={24} />
-            <Text transform="uppercase" size={10}>
+            <Text transform="uppercase" size={14}>
               Cart
             </Text>
             <Circle>{cart?.length}</Circle>

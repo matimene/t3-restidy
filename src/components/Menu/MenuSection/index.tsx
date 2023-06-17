@@ -22,7 +22,7 @@ const MenuSection = ({ section }: { section: MenuSections }) => {
   return (
     <>
       <div className={classes.container}>
-        <Text size={30} align="center" transform="uppercase">
+        <Text size={30} align="center" transform="uppercase" color="white">
           {section?.nameEn}
         </Text>
         <GradientDivider w={100} />

@@ -101,16 +101,14 @@ const Product = ({
           }}
         >
           <Row align="center" justify="space-between" mb={6}>
-            <Text transform="uppercase" weight={700} size={16}>
+            <Text transform="uppercase" weight={700} size={20} color="white">
               {title}
             </Text>
-            <Text weight={700} size={16} color="yellow.6">
+            <Text weight={700} size={20} color="white">
               {item?.price}€
             </Text>
           </Row>
-          <Text transform="capitalize" size={14}>
-            {description}
-          </Text>
+          <Text size={16}>{description}</Text>
           <Row justify="flex-end" align="center" style={{ minHeight: 36 }}>
             {!!itemInCart ? (
               isMobile() ? (

@@ -9,6 +9,7 @@ import {
 } from "@mantine/core";
 import { Toaster } from "react-hot-toast";
 import { useState } from "react";
+import { yanone } from "~/utils/fonts";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
@@ -40,6 +41,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
                 "linear-gradient(90deg, rgba(255,158,38,1) 0%, rgba(255,248,13,1) 100%)",
               ],
             },
+            fontFamily: yanone.style.fontFamily,
           }}
         >
           <Toaster />

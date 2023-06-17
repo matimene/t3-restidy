@@ -61,7 +61,7 @@ const SectionsList = ({
               >
                 x
               </SectionItem>
-              <Text align="center" mt={12} transform="uppercase">
+              <Text align="center" mt={12} transform="uppercase" color="white">
                 {section.nameEn}
               </Text>
             </div>

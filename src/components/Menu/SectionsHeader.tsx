@@ -14,7 +14,7 @@ const SectionsHeader = ({ menu }: { menu: MenuWithSections }) => {
   return (
     <Box w="100%" mx="auto">
       <Row mr={24} ml={24} justify="space-between" onClick={toggle}>
-        <Text transform="uppercase" size={18}>
+        <Text transform="uppercase" size={18} color="white">
           Categories
         </Text>
         {opened ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
@@ -33,6 +33,7 @@ const SectionsHeader = ({ menu }: { menu: MenuWithSections }) => {
             size={16}
             key={section.id}
             my={12}
+            color="white"
             onClick={() =>
               void router.push(`/menu/${menu.slug}/${section.slug}`)
             }

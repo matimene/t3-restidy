@@ -64,7 +64,7 @@ const MenuNavbar = () => {
           </ItemContainer>
         </Row>
       </Box>
-      <CartDrawer opened={opened} onClose={close} />
+      {opened && <CartDrawer opened={opened} onClose={close} />}
     </>
   );
 };

@@ -16,6 +16,7 @@ import useCart from "~/utils/hooks/useCart";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
+import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
 
 const CartProduct = ({
   cartItem,
@@ -167,7 +168,7 @@ const CartDrawer = ({
             flex: 1,
           }}
         >
-          {!cart.length ? (
+          {!isLoading && !cart.length ? (
             <div
               style={{
                 height: "100%",
@@ -186,16 +187,16 @@ const CartDrawer = ({
             </div>
           ) : (
             <>
-              {!isLoading && (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 12,
-                    flex: 1,
-                  }}
-                >
-                  {cart.map((cartItem) => (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12,
+                  flex: 1,
+                }}
+              >
+                {!isLoading ? (
+                  cart.map((cartItem) => (
                     <CartProduct
                       key={cartItem?.itemId}
                       cartItem={cartItem}
@@ -205,11 +206,13 @@ const CartDrawer = ({
                         ) as Item
                       }
                     />
-                  ))}
-                </div>
-              )}
+                  ))
+                ) : (
+                  <LoadingSpinner />
+                )}
+              </div>
               <div>
-                <Text align="center" mb={12}>
+                <Text align="center" mb={12} mt={12}>
                   Total: {cartTotal}€
                 </Text>
                 <Button

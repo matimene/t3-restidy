@@ -6,12 +6,14 @@ import {
   Center,
   Burger,
   Container,
+  Text,
   rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ChevronDown, MoodSmileDizzy } from "tabler-icons-react";
 import ThemeToggler from "../Primary/ThemeToggler";
 import { UserButton } from "@clerk/nextjs";
+import RestidyLogo from "../Primary/RestidyLogo";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -133,17 +135,7 @@ function AdminHeader({ links }: HeaderSearchProps) {
     <Header height={56} className={classes.header} style={{ zIndex: 101 }}>
       <Container>
         <div className={classes.inner}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              fontWeight: 600,
-            }}
-          >
-            <MoodSmileDizzy size={28} />
-            RESTIDY
-          </div>
+          <RestidyLogo />
           <Group spacing={5} className={classes.links}>
             {items}
             <div

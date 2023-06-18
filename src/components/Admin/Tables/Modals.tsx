@@ -88,6 +88,7 @@ export const TablesModals = ({
               <Link
                 href={`${origin}/menu?token=${selectedTable.token}`}
                 target="_blank"
+                prefetch={false}
               >
                 Open
               </Link>

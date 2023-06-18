@@ -22,11 +22,13 @@ const Section = ({
   isNew,
   onEdit,
   onDelete,
+  isLast,
 }: {
   item: MenuSections | NewMenuSections;
   isNew: boolean;
   onEdit(section: MenuSections | NewMenuSections): void;
   onDelete(): void;
+  isLast: boolean;
 }) => {
   const [isEditingProps, setIsEditingProps] = useState(isNew);
   const itemIds = item?.itemIds?.split(";") || [];
@@ -137,10 +139,11 @@ const Section = ({
         data={productsData}
         limit={20}
         searchable
-        dropdownPosition="bottom"
+        dropdownPosition={isLast ? "top" : "bottom"}
         placeholder="Pick products"
         value={itemIds}
         onChange={(ids) => handleEditField("itemIds", ids.join(";"))}
+        styles={{ dropdown: { marginBottom: 12 } }}
       />
     </div>
   );
@@ -219,6 +222,7 @@ const ModalEditSections = ({
 
   return (
     <Modal
+      size="xl"
       opened={isOpen}
       onClose={onClose}
       title={`'${menu?.nameEn || "Menu"}' sections`}
@@ -238,6 +242,7 @@ const ModalEditSections = ({
           key={`section-${index}`}
           item={section}
           isNew={!section?.id}
+          isLast={index === menuSections.length - 1}
           onEdit={(section: MenuSections | NewMenuSections) =>
             handleEditSection(section, index)
           }

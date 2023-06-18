@@ -33,7 +33,13 @@ const ModalEditProduct = ({
   const handleEditProduct = (newBody: Item) => newBody && editItem(newBody);
 
   return (
-    <Modal opened={isOpen} onClose={onClose} title="Edit product" centered>
+    <Modal
+      size="xl"
+      opened={isOpen}
+      onClose={onClose}
+      title="Edit product"
+      centered
+    >
       <LoadingOverlay
         visible={isLoadingProduct || isLoadingMutation}
         overlayBlur={2}

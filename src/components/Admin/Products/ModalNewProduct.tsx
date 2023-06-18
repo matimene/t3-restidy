@@ -26,7 +26,13 @@ const ModalNewProduct = ({
   const handleEditProduct = (newBody: Item) => newBody && createItem(newBody);
 
   return (
-    <Modal opened={isOpen} onClose={onClose} title="New product" centered>
+    <Modal
+      size="xl"
+      opened={isOpen}
+      onClose={onClose}
+      title="New product"
+      centered
+    >
       <LoadingOverlay
         visible={isLoading}
         overlayBlur={2}

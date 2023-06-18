@@ -48,11 +48,14 @@ const Orders = () => {
 
   const ctx = api.useContext();
   const { data: tables } = api.tables.getAll.useQuery();
-  const { data: orders, isLoading } = api.orders.getAll.useQuery({
-    selectedTableId,
-    validStatus,
-    sortBy,
-  });
+  const { data: orders, isLoading } = api.orders.getAll.useQuery(
+    {
+      selectedTableId,
+      validStatus,
+      sortBy,
+    },
+    { refetchInterval: 1000 * 30 } // 30 seconds
+  );
   const TABLES_OPTIONS = buildTableOptions(tables);
 
   const handleEditOrderId = (id: number) => {

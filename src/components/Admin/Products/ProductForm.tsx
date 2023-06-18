@@ -1,4 +1,4 @@
-import { TextInput, Button } from "@mantine/core";
+import { TextInput, Button, Textarea } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { type Item } from "@prisma/client";
 import { Row } from "~/components/Primary";
@@ -35,33 +35,43 @@ const ProductForm = ({
     <>
       <TextInput
         label="SKU"
+        maxLength={190}
         value={newBody?.sku || ""}
         onChange={({ target }) => handleEditField("sku", target?.value)}
       />
       <TextInput
         label="Image URL"
+        maxLength={255}
         value={newBody?.img || ""}
         onChange={({ target }) => handleEditField("img", target?.value)}
       />
       <TextInput
         label="Title (ENG)"
+        maxLength={255}
         value={newBody?.titleEn || ""}
         onChange={({ target }) => handleEditField("titleEn", target?.value)}
       />
       <TextInput
         label="Title (SPA)"
+        maxLength={255}
         value={newBody?.titleEs || ""}
         onChange={({ target }) => handleEditField("titleEs", target?.value)}
       />
-      <TextInput
+      <Textarea
         label="Description (ENG)"
+        maxLength={500}
+        autosize
+        minRows={2}
         value={newBody?.descriptionEn || ""}
         onChange={({ target }) =>
           handleEditField("descriptionEn", target?.value)
         }
       />
-      <TextInput
+      <Textarea
         label="Description (SPA)"
+        maxLength={500}
+        autosize
+        minRows={2}
         value={newBody?.descriptionEs || ""}
         onChange={({ target }) =>
           handleEditField("descriptionEs", target?.value)
@@ -69,6 +79,7 @@ const ProductForm = ({
       />
       <TextInput
         label="Category codes"
+        maxLength={255}
         value={newBody?.categoryCodes || ""}
         onChange={({ target }) =>
           handleEditField("categoryCodes", target?.value)

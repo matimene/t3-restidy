@@ -49,7 +49,13 @@ const ModalEditMenu = ({
   const handleEditMenu = () => editMenu(newBody);
 
   return (
-    <Modal opened={isOpen} onClose={onClose} title="Edit menu" centered>
+    <Modal
+      size="xl"
+      opened={isOpen}
+      onClose={onClose}
+      title="Edit menu"
+      centered
+    >
       <LoadingOverlay
         visible={isLoadingMenus || isEditingMenu}
         overlayBlur={2}

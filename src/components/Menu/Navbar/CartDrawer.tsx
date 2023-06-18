@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import useStore, { type CartItem } from "~/utils/zustand-store";
-import { Row } from "~/components/Primary";
+import { Centered, Row } from "~/components/Primary";
 import { type Item } from "@prisma/client";
 import { api } from "~/utils/api";
 import NumericInput from "~/components/Primary/NumericInput";
@@ -167,41 +167,62 @@ const CartDrawer = ({
             flex: 1,
           }}
         >
-          {!isLoading && (
+          {!cart.length ? (
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
-                flex: 1,
+                height: "100%",
+                marginTop: "100%",
+                textAlign: "center",
               }}
             >
-              {cart.map((cartItem) => (
-                <CartProduct
-                  key={cartItem?.itemId}
-                  cartItem={cartItem}
-                  item={
-                    items?.find(
-                      (product) => product.id === cartItem.itemId
-                    ) as Item
-                  }
-                />
-              ))}
+              <Button
+                color="yellow.6"
+                variant="light"
+                onClick={onClose}
+                style={{ textTransform: "uppercase" }}
+              >
+                Add products to continue
+              </Button>
             </div>
+          ) : (
+            <>
+              {!isLoading && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 12,
+                    flex: 1,
+                  }}
+                >
+                  {cart.map((cartItem) => (
+                    <CartProduct
+                      key={cartItem?.itemId}
+                      cartItem={cartItem}
+                      item={
+                        items?.find(
+                          (product) => product.id === cartItem.itemId
+                        ) as Item
+                      }
+                    />
+                  ))}
+                </div>
+              )}
+              <div>
+                <Text align="center" mb={12}>
+                  Total: {cartTotal}€
+                </Text>
+                <Button
+                  fullWidth
+                  color="yellow.7"
+                  style={{ fontSize: 18 }}
+                  onClick={handlePlaceOrder}
+                >
+                  Place order
+                </Button>
+              </div>
+            </>
           )}
-          <div>
-            <Text align="center" mb={12}>
-              Total: {cartTotal}€
-            </Text>
-            <Button
-              fullWidth
-              color="yellow.7"
-              style={{ fontSize: 18 }}
-              onClick={handlePlaceOrder}
-            >
-              Place order
-            </Button>
-          </div>
         </Drawer.Body>
       </Drawer.Content>
     </Drawer.Root>

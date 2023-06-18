@@ -6,7 +6,6 @@ import { useDisclosure } from "@mantine/hooks";
 import useStore from "~/utils/zustand-store";
 import { Row } from "~/components/Primary";
 import CartDrawer from "./CartDrawer";
-import RestidyLogo from "~/components/Primary/RestidyLogo";
 
 const ItemContainer = styled.div`
   display: flex;
@@ -53,7 +52,7 @@ const MenuNavbar = () => {
             </Text>
           </ItemContainer>
           <Text color="white" transform="uppercase" size={18} pt={4}>
-            Boludo's Store
+            Boludo&apos;s Store
           </Text>
           <ItemContainer onClick={openCart}>
             <ShoppingCart size={24} />

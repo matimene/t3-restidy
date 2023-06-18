@@ -41,9 +41,7 @@ const ProductForm = ({
       <TextInput
         label="Image URL"
         value={newBody?.img || ""}
-        onChange={({ target }) =>
-          target?.value && handleEditField("img", target?.value)
-        }
+        onChange={({ target }) => handleEditField("img", target?.value)}
       />
       <TextInput
         label="Title (ENG)"

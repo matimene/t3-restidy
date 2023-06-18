@@ -34,12 +34,13 @@ const SectionsHeader = ({ menu }: { menu: MenuWithSections }) => {
             key={section.id}
             my={12}
             color="white"
-            onClick={() =>
+            onClick={() => {
               void router.push({
                 pathname: `/menu/${menu.slug}/${section.slug}`,
                 query: { token: router.query.token },
-              })
-            }
+              });
+              toggle();
+            }}
           >
             {section?.nameEn}
           </Text>

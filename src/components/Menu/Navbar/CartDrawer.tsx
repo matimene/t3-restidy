@@ -117,12 +117,14 @@ const CartDrawer = ({
   const { data: items, isLoading } = api.items.getByIds.useQuery({
     ids: cart.map((cartItem) => cartItem.itemId).join(";"),
   });
-  const cartTotal = cart.reduce((tally, item) => {
-    if (!items) return tally;
-    const product = items.find((p) => p.id === item.itemId);
-    if (!product) return tally;
-    return tally + product.price * item.quantity;
-  }, 0);
+  const cartTotal = cart
+    .reduce((tally, item) => {
+      if (!items) return tally;
+      const product = items.find((p) => p.id === item.itemId);
+      if (!product) return tally;
+      return tally + product.price * item.quantity;
+    }, 0)
+    .toFixed(2);
 
   const { mutate: createOrder } = api.orders.create.useMutation({
     onSuccess: () => {

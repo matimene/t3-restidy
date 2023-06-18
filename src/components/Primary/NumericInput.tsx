@@ -44,6 +44,7 @@ function NumericInput({
         min={0}
         step={1}
         variant="filled"
+        autoFocus={false}
         styles={{
           input: {
             width: rem(40),

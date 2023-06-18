@@ -15,7 +15,9 @@ const MenuSectionPage: NextPage = ({ store }: { store?: Store }) => {
   const menuSlug = router.query?.menu as string;
   const sectionSlug = router.query?.section as string;
 
-  const { data: menus, isLoading } = api.menus.getAll.useQuery();
+  const { data: menus, isLoading } = api.menus.getAll.useQuery({
+    active: true,
+  });
 
   const selectedMenu = menus?.find((menu) => menu.slug === menuSlug);
   const selectedSection = selectedMenu?.sections?.find(

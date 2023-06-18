@@ -35,7 +35,10 @@ const SectionsHeader = ({ menu }: { menu: MenuWithSections }) => {
             my={12}
             color="white"
             onClick={() =>
-              void router.push(`/menu/${menu.slug}/${section.slug}`)
+              void router.push({
+                pathname: `/menu/${menu.slug}/${section.slug}`,
+                query: { token: router.query.token },
+              })
             }
           >
             {section?.nameEn}

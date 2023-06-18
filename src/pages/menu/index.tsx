@@ -6,8 +6,10 @@ import { api } from "~/utils/api";
 import { type Store } from "@prisma/client";
 import { Centered } from "~/components/Primary/LoadingSpinner";
 import MenusList from "~/components/Menu/MenusList";
+import { useRouter } from "next/router";
 
 const MenusPage: NextPage = ({ store }: { store?: Store }) => {
+  const router = useRouter();
   const { data: menus, isLoading } = api.menus.getAll.useQuery();
 
   if (isLoading || !menus)
@@ -16,6 +18,12 @@ const MenusPage: NextPage = ({ store }: { store?: Store }) => {
         <Loader />
       </Centered>
     );
+
+  if (menus.length === 1 && menus[0])
+    void router.push({
+      pathname: `/menu/${menus[0].slug}`,
+      query: { token: router.query.token },
+    });
 
   return (
     <>

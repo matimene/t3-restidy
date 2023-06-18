@@ -42,18 +42,21 @@ const MenusList = ({
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <>
-      <div className={classes.container}>
-        {menus?.map((menu) => (
-          <MenuItem
-            key={menu.id}
-            onClick={() => void router.push(`/menu/${menu.slug}`)}
-          >
-            {menu.nameEn}
-          </MenuItem>
-        ))}
-      </div>
-    </>
+    <div className={classes.container}>
+      {menus?.map((menu) => (
+        <MenuItem
+          key={menu.id}
+          onClick={() =>
+            void router.push({
+              pathname: `/menu/${menu.slug}`,
+              query: { token: router.query.token },
+            })
+          }
+        >
+          {menu.nameEn}
+        </MenuItem>
+      ))}
+    </div>
   );
 };
 export default MenusList;

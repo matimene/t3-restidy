@@ -10,6 +10,7 @@ const ItemContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 `;
 const Circle = styled.div`
   position: absolute;
@@ -17,8 +18,8 @@ const Circle = styled.div`
   height: 14px;
   color: black;
   background-color: #ffffffcc;
-  top: 20px;
-  right: 20px;
+  top: -4px;
+  right: -4px;
   line-height: 14px;
   font-size: 10px;
   font-weight: 600;
@@ -34,7 +35,7 @@ const MenuNavbar = () => {
 
   return (
     <>
-      <Box w="100%" mx="auto" mb={18}>
+      <Box w="100%" mx="auto" mb={18} style={{ position: "sticky" }}>
         <Row mr={24} ml={24} justify="space-between">
           <ItemContainer
             onClick={() =>
@@ -58,7 +59,7 @@ const MenuNavbar = () => {
           </ItemContainer>
         </Row>
       </Box>
-      <Drawer opened={opened} onClose={close} title="Authentication">
+      <Drawer opened={opened} onClose={close} title="Cart">
         {/* Drawer content */}
       </Drawer>
     </>

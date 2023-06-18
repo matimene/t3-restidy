@@ -1,7 +1,7 @@
 import { Text, createStyles } from "@mantine/core";
 import ProductsList from "./ProductsLists";
 import { type MenuSections } from "@prisma/client";
-import { GradientDivider } from "~/components/Primary";
+import { Centered, GradientDivider } from "~/components/Primary";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -18,6 +18,8 @@ const useStyles = createStyles((theme) => ({
 
 const MenuSection = ({ section }: { section: MenuSections }) => {
   const { classes } = useStyles();
+
+  if (!section?.itemIds?.length) return <Centered>No products yet</Centered>;
 
   return (
     <>

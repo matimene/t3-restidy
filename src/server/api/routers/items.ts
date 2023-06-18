@@ -33,12 +33,14 @@ export const itemsRouter = createTRPCRouter({
       z.object({
         sortBy: z.string().optional(),
         skip: z.number().optional(),
-        ids: z.string(),
+        ids: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const storeId = ctx.store?.id;
       const { skip = 0, sortBy = "titleEn", ids } = input;
+
+      if (!ids) return [];
       const productIds = ids.split(";").map((id) => parseInt(id));
 
       const items = await ctx.prisma.item.findMany({

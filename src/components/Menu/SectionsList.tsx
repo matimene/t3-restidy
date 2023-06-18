@@ -49,26 +49,27 @@ const SectionsList = ({
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <>
-      <div className={classes.container}>
-        <SimpleGrid cols={2}>
-          {menu?.sections.map((section) => (
-            <div key={section.id}>
-              <SectionItem
-                onClick={() =>
-                  void router.push(`/menu/${menu.slug}/${section.slug}`)
-                }
-              >
-                x
-              </SectionItem>
-              <Text align="center" mt={12} transform="uppercase" color="white">
-                {section.nameEn}
-              </Text>
-            </div>
-          ))}
-        </SimpleGrid>
-      </div>
-    </>
+    <div className={classes.container}>
+      <SimpleGrid cols={2}>
+        {menu?.sections?.map((section) => (
+          <div key={section.id}>
+            <SectionItem
+              onClick={() =>
+                void router.push({
+                  pathname: `/menu/${menu.slug}/${section.slug}`,
+                  query: { token: router.query.token },
+                })
+              }
+            >
+              {section?.itemIds?.split(";")?.length}
+            </SectionItem>
+            <Text align="center" mt={12} transform="uppercase" color="white">
+              {section.nameEn}
+            </Text>
+          </div>
+        ))}
+      </SimpleGrid>
+    </div>
   );
 };
 export default SectionsList;

@@ -9,19 +9,18 @@ interface LayoutProps {
 
 const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
   main: {
-    position: "relative",
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url(${bgUrl})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    display: "flex",
-    justifyContent: "start",
     width: "100%",
     marginLeft: "auto",
     marginRight: "auto",
-    height: "100vh",
-    overflowY: "scroll",
-    maxHeight: "-webkit-fill-available",
+    minHeight: "100vh",
+    display: "flex",
+    // justifyContent: "start",
+    // overflowY: "scroll",
+    // maxHeight: "-webkit-fill-available",
   },
   nav: {
     backgroundColor: theme.colors.gray[5],
@@ -29,15 +28,17 @@ const useStyles = createStyles((theme, { bgUrl }: LayoutProps) => ({
     justifyContent: "flex-end",
     width: "100%",
     height: rem(48),
+    overflow: "visible",
   },
   content: {
+    position: "relative",
     maxWidth: rem(1024),
     width: "100%",
-    height: "100%",
+    flex: 1,
     paddingTop: rem(24),
     paddingBottom: rem(24),
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "start",
     marginLeft: "auto",
     marginRight: "auto",
     borderRadius: theme.radius.sm,
@@ -53,23 +54,11 @@ const BG_IMAGES = [
 ]; // TODO: get dynamic from store
 
 export const PageLayout = (props: PageLayoutProps) => {
-  const user = useUser();
   const bgImage = useIntervalPicker(BG_IMAGES, 5000);
   const { classes } = useStyles({ bgUrl: bgImage });
 
   return (
     <main className={classes.main}>
-      {props.showNav ? (
-        <nav className={classes.nav}>
-          {!!user.isSignedIn && (
-            <SignInButton mode="modal">
-              <button className="btn">Sign in</button>
-            </SignInButton>
-          )}
-        </nav>
-      ) : (
-        ""
-      )}
       <div className={classes.content}>{props.children}</div>
     </main>
   );

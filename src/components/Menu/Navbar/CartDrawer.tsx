@@ -49,7 +49,7 @@ const CartProduct = ({
               onClick={open}
             />
           )}
-          <Text>{`${item?.titleEn ?? ""} (${item?.price}€)`}</Text>
+          <Text>{`${item?.titleEn ?? ""} (${item?.price.toFixed(2)}€)`}</Text>
         </div>
         <NumericInput
           value={cartItem.quantity}

@@ -89,7 +89,7 @@ const Product = ({
               {title}
             </Text>
             <Text weight={700} size={20} color="white">
-              {item?.price}€
+              {item?.price.toFixed(2)}€
             </Text>
           </Row>
           <Text size={16}>{description}</Text>

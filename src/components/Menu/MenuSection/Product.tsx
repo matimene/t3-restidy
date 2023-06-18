@@ -13,7 +13,8 @@ import { getProductLocaleProps } from "~/utils/helpers";
 import useMobileDetection from "~/utils/hooks/useMobileDetection";
 import { Row } from "~/components/Primary";
 import NumericInput from "~/components/Primary/NumericInput";
-import useStore, { type CartItem } from "~/utils/zustand-store";
+import { type CartItem } from "~/utils/zustand-store";
+import useCart from "~/utils/hooks/useCart";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -46,30 +47,13 @@ const Product = ({
 }) => {
   const { isMobile } = useMobileDetection();
   const { classes } = useStyles();
-  const { dispatch } = useStore();
+  const { handleEditCart } = useCart(item.id);
   const [opened, { open, close }] = useDisclosure(false);
 
   const { title, description } = getProductLocaleProps<Item>({
     item,
     keys: ["title", "description"],
   });
-
-  const handleEditCart = ({
-    quantity,
-    notes,
-  }: {
-    quantity: number;
-    notes?: string;
-  }) => {
-    if (quantity === 0) return dispatch.deleteCartItem(item.id);
-
-    const cartItem = {
-      itemId: item.id,
-      quantity,
-      notes,
-    };
-    dispatch.editCartItem(cartItem);
-  };
 
   return (
     <>

@@ -86,11 +86,11 @@ export const ordersRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({
-        token: z.string().min(5),
+        token: z.string().nullish(),
         items: z.array(
           z.object({
             itemId: z.number(),
-            qty: z.number(),
+            quantity: z.number(),
             notes: z.string().optional(),
           })
         ),
@@ -98,10 +98,12 @@ export const ordersRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const storeId = ctx.store?.id as number;
+      const token = input.token;
+      if (!token) return;
 
       const table = await ctx.prisma.table.findFirstOrThrow({
         where: {
-          token: input.token,
+          token,
           storeId,
         },
       });
@@ -125,7 +127,7 @@ export const ordersRouter = createTRPCRouter({
             data: {
               orderId: order.id,
               itemId: item.itemId,
-              qty: item.qty,
+              qty: item.quantity,
               notes: item.notes,
               price: storeItem.price,
             },

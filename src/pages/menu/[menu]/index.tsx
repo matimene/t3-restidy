@@ -7,7 +7,7 @@ import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
 import SectionsList from "~/components/Menu/SectionsList";
 import { SmtWrong } from "~/components/Primary";
 import { useRouter } from "next/router";
-import MenuNavbar from "~/components/Menu/MenuNavbar";
+import MenuNavbar from "~/components/Menu/Navbar";
 
 const MenuPage: NextPage = ({ store }: { store?: Store }) => {
   const router = useRouter();

@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { SmtWrong } from "~/components/Primary";
 import MenuSection from "~/components/Menu/MenuSection";
 import SectionsHeader from "~/components/Menu/SectionsHeader";
-import MenuNavbar from "~/components/Menu/MenuNavbar";
+import MenuNavbar from "~/components/Menu/Navbar";
 
 const MenuSectionPage: NextPage = ({ store }: { store?: Store }) => {
   const router = useRouter();

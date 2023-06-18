@@ -60,7 +60,9 @@ const Menus = () => {
   return (
     <>
       <Row align="center" justify="center">
-        <Text>Menus</Text>
+        <Text transform="uppercase" weight={600} size={24}>
+          Menus
+        </Text>
       </Row>
       <div className={classes.filterContainer}>
         <Row>

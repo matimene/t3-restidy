@@ -1,6 +1,6 @@
 "use client";
 
-import { createStyles, Button, Select, Table, rem } from "@mantine/core";
+import { createStyles, Button, Select, Table, rem, Text } from "@mantine/core";
 import { type RouterOutputs, api } from "~/utils/api";
 import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import { useState } from "react";
@@ -63,6 +63,11 @@ const Tables = () => {
 
   return (
     <>
+      <Row align="center" justify="center">
+        <Text transform="uppercase" weight={600} size={24}>
+          Tables
+        </Text>
+      </Row>
       <div className={classes.filterContainer}>
         <Row gap={12} align="flex-end">
           <Select

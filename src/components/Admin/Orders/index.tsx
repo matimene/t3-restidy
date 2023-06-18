@@ -1,4 +1,11 @@
-import { MultiSelect, createStyles, Select, rem, Button } from "@mantine/core";
+import {
+  MultiSelect,
+  createStyles,
+  Select,
+  rem,
+  Button,
+  Text,
+} from "@mantine/core";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import { useState } from "react";
@@ -57,6 +64,11 @@ const Orders = () => {
 
   return (
     <>
+      <Row align="center" justify="center">
+        <Text transform="uppercase" weight={600} size={24}>
+          Orders
+        </Text>
+      </Row>
       <div className={classes.filterContainer}>
         <Row align="flex-end" gap={12}>
           <Select

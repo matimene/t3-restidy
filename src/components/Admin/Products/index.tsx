@@ -1,4 +1,4 @@
-import { createStyles, Select, rem, Button, Table } from "@mantine/core";
+import { createStyles, Select, rem, Button, Table, Text } from "@mantine/core";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import { useState } from "react";
@@ -49,6 +49,11 @@ const Products = () => {
 
   return (
     <>
+      <Row align="center" justify="center">
+        <Text transform="uppercase" weight={600} size={24}>
+          Products
+        </Text>
+      </Row>
       <div className={classes.filterContainer}>
         <Row justify="center" align="flex-end" gap={12}>
           <Select

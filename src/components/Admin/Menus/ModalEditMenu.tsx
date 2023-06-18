@@ -1,15 +1,9 @@
-import {
-  TextInput,
-  LoadingOverlay,
-  Modal,
-  Button,
-  Chip,
-  Group,
-} from "@mantine/core";
+import { TextInput, LoadingOverlay, Modal, Button } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { type RouterOutputs, api } from "~/utils/api";
 import { Row } from "~/components/Primary";
 import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
+import BooleanChip from "~/components/Primary/BooleanChip";
 
 type MenuWithSections = RouterOutputs["menus"]["getAll"][number];
 
@@ -61,18 +55,10 @@ const ModalEditMenu = ({
         overlayBlur={2}
         transitionDuration={500}
       />
-      <Chip.Group
-        multiple={false}
-        value={newBody.active ? "1" : "0"}
-        onChange={(value) =>
-          handleEditField("active", value === "0" ? false : true)
-        }
-      >
-        <Group position="center">
-          <Chip value={"0"}>Disabled</Chip>
-          <Chip value={"1"}>Active</Chip>
-        </Group>
-      </Chip.Group>
+      <BooleanChip
+        value={newBody.active}
+        onChange={(value) => handleEditField("active", value)}
+      />
       <TextInput
         label="Slug"
         value={newBody?.slug ?? ""}

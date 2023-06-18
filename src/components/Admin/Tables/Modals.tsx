@@ -1,10 +1,11 @@
-import { Button, Select, Modal, TextInput } from "@mantine/core";
+import { Button, Select, Modal, TextInput, Text } from "@mantine/core";
 import { type RouterOutputs, api } from "~/utils/api";
 import { Row } from "~/components/Primary";
 import QRCode from "react-qr-code";
 import { useForm } from "@mantine/form";
 import { toast } from "react-hot-toast";
 import { buildTableOptions } from "./helper";
+import Link from "next/link";
 
 type TableWithPtable = RouterOutputs["tables"]["getAll"][number];
 
@@ -71,17 +72,27 @@ export const TablesModals = ({
         centered
       >
         {selectedTable && (
-          <QRCode
-            size={256}
-            style={{
-              height: "auto",
-              maxWidth: "100%",
-              width: "100%",
-              border: "12px solid white",
-            }}
-            value={`${origin}/menu/${selectedTable.token}`}
-            viewBox={`0 0 256 256`}
-          />
+          <>
+            <QRCode
+              size={256}
+              style={{
+                height: "auto",
+                maxWidth: "100%",
+                width: "100%",
+                border: "12px solid white",
+              }}
+              value={`${origin}/menu?token=${selectedTable.token}`}
+              viewBox={`0 0 256 256`}
+            />
+            <Text align="center" size={20} mt={12}>
+              <Link
+                href={`${origin}/menu?token=${selectedTable.token}`}
+                target="_blank"
+              >
+                Open
+              </Link>
+            </Text>
+          </>
         )}
       </Modal>
       <Modal

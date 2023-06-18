@@ -80,6 +80,11 @@ function buildTabLinks(setActive: (tab: string) => void) {
           onClick: () => setActive(TABS.MENUS),
         },
         {
+          label: TABS.PHYSICAL_TABLES,
+          key: TABS.PHYSICAL_TABLES,
+          onClick: () => setActive(TABS.PHYSICAL_TABLES),
+        },
+        {
           label: TABS.PRODUCTS,
           key: TABS.PRODUCTS,
           onClick: () => setActive(TABS.PRODUCTS),

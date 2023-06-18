@@ -5,6 +5,7 @@ import {
   Text,
   useMantineTheme,
   Button,
+  TextInput,
 } from "@mantine/core";
 import useStore, { type CartItem } from "~/utils/zustand-store";
 import { Row } from "~/components/Primary";
@@ -54,6 +55,13 @@ const CartProduct = ({
           setValue={(quantity) => handleEditCart({ quantity })}
         />
       </Row>
+      <TextInput
+        mt={-6}
+        mb={6}
+        placeholder="Notes"
+        value={cartItem?.notes}
+        onChange={({ target }) => handleEditCart({ notes: target?.value })}
+      />
       <Modal
         fullScreen
         padding="6px"

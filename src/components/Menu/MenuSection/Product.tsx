@@ -136,6 +136,7 @@ const Product = ({
           src={item.img}
           alt={item.sku}
           styles={{ image: { minHeight: 300 } }}
+          data-autofocus
         />
         <NumericInput
           showDecrement={false}

@@ -10,7 +10,9 @@ import { useRouter } from "next/router";
 
 const MenusPage: NextPage = ({ store }: { store?: Store }) => {
   const router = useRouter();
-  const { data: menus, isLoading } = api.menus.getAll.useQuery();
+  const { data: menus, isLoading } = api.menus.getAll.useQuery({
+    active: true,
+  });
 
   if (isLoading || !menus)
     return (

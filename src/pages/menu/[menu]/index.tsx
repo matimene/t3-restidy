@@ -13,7 +13,9 @@ const MenuPage: NextPage = ({ store }: { store?: Store }) => {
   const router = useRouter();
   const menuSlug = router.query?.menu as string;
 
-  const { data: menus, isLoading } = api.menus.getAll.useQuery();
+  const { data: menus, isLoading } = api.menus.getAll.useQuery({
+    active: true,
+  });
   const selectedMenu = menus?.find((menu) => menu.slug === menuSlug);
 
   if (isLoading) return <LoadingSpinner />;

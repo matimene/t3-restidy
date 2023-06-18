@@ -6,20 +6,31 @@ import {
 } from "~/server/api/trpc";
 
 export const menusRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const storeId = ctx.store?.id;
-    const menus = await ctx.prisma.menu.findMany({
-      where: { storeId },
-      include: {
-        sections: {
-          orderBy: {
-            order: "asc",
+  getAll: publicProcedure
+    .input(
+      z
+        .object({
+          active: z.boolean().optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const storeId = ctx.store?.id;
+      const menus = await ctx.prisma.menu.findMany({
+        where: {
+          storeId,
+          active: input?.active,
+        },
+        include: {
+          sections: {
+            orderBy: {
+              order: "asc",
+            },
           },
         },
-      },
-    });
-    return menus;
-  }),
+      });
+      return menus;
+    }),
 
   create: privateProcedure
     .input(

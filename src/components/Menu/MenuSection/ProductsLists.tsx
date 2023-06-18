@@ -10,7 +10,6 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "flex-start",
-    gap: rem(12),
   },
 }));
 

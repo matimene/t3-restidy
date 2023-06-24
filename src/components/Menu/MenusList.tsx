@@ -3,6 +3,7 @@ import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
 import { type Menu } from "@prisma/client";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
+import { getFieldTranslation } from "~/utils/hooks/useFieldTranslation";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -53,7 +54,7 @@ const MenusList = ({
             })
           }
         >
-          {menu.nameEn}
+          {getFieldTranslation(menu, "name", router)}
         </MenuItem>
       ))}
     </div>

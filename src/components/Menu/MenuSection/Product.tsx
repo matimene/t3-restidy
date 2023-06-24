@@ -9,12 +9,12 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { type Item } from "@prisma/client";
-import { getProductLocaleProps } from "~/utils/helpers";
 import useMobileDetection from "~/utils/hooks/useMobileDetection";
 import { Row } from "~/components/Primary";
 import NumericInput from "~/components/Primary/NumericInput";
 import { type CartItem } from "~/utils/zustand-store";
 import useCart from "~/utils/hooks/useCart";
+import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -50,11 +50,6 @@ const Product = ({
   const { handleEditCart } = useCart(item.id);
   const [opened, { open, close }] = useDisclosure(false);
 
-  const { title, description } = getProductLocaleProps<Item>({
-    item,
-    keys: ["title", "description"],
-  });
-
   return (
     <>
       <div className={classes.container}>
@@ -86,13 +81,13 @@ const Product = ({
         >
           <Row align="center" justify="space-between" mb={6}>
             <Text transform="uppercase" weight={700} size={20} color="white">
-              {title}
+              {useFieldTranslation(item, "title")}
             </Text>
             <Text weight={700} size={20} color="white">
               {item?.price.toFixed(2)}€
             </Text>
           </Row>
-          <Text size={16}>{description}</Text>
+          <Text size={16}> {useFieldTranslation(item, "description")}</Text>
           <Row justify="flex-end" align="center" style={{ minHeight: 36 }}>
             {!!itemInCart ? (
               isMobile() ? (

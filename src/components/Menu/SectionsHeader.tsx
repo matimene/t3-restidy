@@ -4,6 +4,7 @@ import { type RouterOutputs } from "~/utils/api";
 import { ChevronDown, ChevronUp } from "tabler-icons-react";
 import { GradientDivider, Row } from "../Primary";
 import { useRouter } from "next/router";
+import { getFieldTranslation } from "~/utils/hooks/useFieldTranslation";
 
 type MenuWithSections = RouterOutputs["menus"]["getAll"][number];
 
@@ -42,7 +43,7 @@ const SectionsHeader = ({ menu }: { menu: MenuWithSections }) => {
               toggle();
             }}
           >
-            {section?.nameEn}
+            {getFieldTranslation(section, "name", router)}
           </Text>
         ))}
       </Collapse>

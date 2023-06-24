@@ -2,6 +2,10 @@ import { Text, createStyles } from "@mantine/core";
 import ProductsList from "./ProductsLists";
 import { type MenuSections } from "@prisma/client";
 import { Centered, GradientDivider } from "~/components/Primary";
+import useFieldTranslation, {
+  getFieldTranslation,
+} from "~/utils/hooks/useFieldTranslation";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -18,6 +22,7 @@ const useStyles = createStyles((theme) => ({
 
 const MenuSection = ({ section }: { section: MenuSections }) => {
   const { classes } = useStyles();
+  const router = useRouter();
 
   if (!section?.itemIds?.length) return <Centered>No products yet</Centered>;
 
@@ -25,7 +30,7 @@ const MenuSection = ({ section }: { section: MenuSections }) => {
     <>
       <div className={classes.container}>
         <Text size={30} align="center" transform="uppercase" color="white">
-          {section?.nameEn}
+          {getFieldTranslation(section, "name", router)}
         </Text>
         <GradientDivider w={100} />
         <ProductsList ids={section?.itemIds ?? ""} />

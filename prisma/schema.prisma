@@ -143,3 +143,14 @@ model Store {
 
   @@index([code])
 }
+
+model StoreConfig {
+  id           Int    @id @default(autoincrement())
+  storeId      Int
+  defaultLang  String @default("en") @db.VarChar(10)
+  logo         String @db.VarChar(500)
+  bgImgs       String @db.VarChar(500)
+  customColors String @db.VarChar(750)
+
+  @@index([storeId])
+}

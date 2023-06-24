@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import useStore, { type CartItem } from "~/utils/zustand-store";
-import { Centered, Row } from "~/components/Primary";
+import { Row } from "~/components/Primary";
 import { type Item } from "@prisma/client";
 import { api } from "~/utils/api";
 import NumericInput from "~/components/Primary/NumericInput";
@@ -17,6 +17,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
 import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
+import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
 
 const CartProduct = ({
   cartItem,
@@ -49,7 +50,9 @@ const CartProduct = ({
               onClick={open}
             />
           )}
-          <Text>{`${item?.titleEn ?? ""} (${item?.price.toFixed(2)}€)`}</Text>
+          <Text>{`${useFieldTranslation(item, "title")} (${item?.price.toFixed(
+            2
+          )}€)`}</Text>
         </div>
         <NumericInput
           value={cartItem.quantity}

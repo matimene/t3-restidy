@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { url } from "inspector";
 import menu from "~/pages/menu";
+import { getFieldTranslation } from "~/utils/hooks/useFieldTranslation";
 
 type MenuWithSections = RouterOutputs["menus"]["getAll"][number];
 
@@ -70,7 +71,7 @@ const SectionsList = ({
               }
             >
               <Text align="center" transform="uppercase" color="white">
-                {section.nameEn}
+                {getFieldTranslation(section, "name", router)}
               </Text>
             </SectionItem>
           </div>

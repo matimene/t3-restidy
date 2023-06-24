@@ -1,4 +1,5 @@
-import { z } from "zod";
+import { optional, z } from "zod";
+import menu from "~/pages/menu";
 import {
   createTRPCRouter,
   privateProcedure,
@@ -30,6 +31,30 @@ export const menusRouter = createTRPCRouter({
         },
       });
       return menus;
+    }),
+
+  getBySlug: publicProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const storeId = ctx.store?.id as number;
+      const menu = await ctx.prisma.menu.findFirstOrThrow({
+        where: {
+          storeId,
+          slug: input.slug,
+        },
+        include: {
+          sections: {
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+      });
+      return menu;
     }),
 
   create: privateProcedure

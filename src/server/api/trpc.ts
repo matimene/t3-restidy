@@ -29,11 +29,11 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const sesh = getAuth(req);
   const userId = sesh.userId;
 
-  const code = req?.headers?.host?.split(".")[0];
+  const storeCode = req?.headers?.host?.split(".")[0];
   let store;
-  if (code) {
+  if (storeCode) {
     store = await prisma.store.findUniqueOrThrow({
-      where: { code },
+      where: { code: storeCode },
     });
   }
   let user;

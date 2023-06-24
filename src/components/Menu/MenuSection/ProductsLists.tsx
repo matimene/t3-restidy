@@ -1,10 +1,10 @@
-import { createStyles, rem } from "@mantine/core";
+import { createStyles } from "@mantine/core";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "../../Primary/LoadingSpinner";
 import Product from "./Product";
 import useStore from "~/utils/zustand-store";
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   container: {
     width: "100%",
     display: "flex",

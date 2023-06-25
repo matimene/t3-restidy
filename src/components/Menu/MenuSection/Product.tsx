@@ -45,6 +45,7 @@ const Product = ({
   item: Item;
   itemInCart?: CartItem;
 }) => {
+  const { toLocale } = useFieldTranslation();
   const { isMobile } = useMobileDetection();
   const { classes } = useStyles();
   const { handleEditCart } = useCart(item.id);
@@ -81,13 +82,13 @@ const Product = ({
         >
           <Row align="center" justify="space-between" mb={6}>
             <Text transform="uppercase" weight={700} size={20} color="white">
-              {useFieldTranslation(item, "title")}
+              {toLocale(item, "title")}
             </Text>
             <Text weight={700} size={20} color="white">
               {item?.price.toFixed(2)}€
             </Text>
           </Row>
-          <Text size={16}> {useFieldTranslation(item, "description")}</Text>
+          <Text size={16}> {toLocale(item, "description")}</Text>
           <Row justify="flex-end" align="center" style={{ minHeight: 36 }}>
             {!!itemInCart ? (
               isMobile() ? (

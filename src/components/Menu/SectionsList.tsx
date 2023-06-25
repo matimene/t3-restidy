@@ -3,9 +3,7 @@ import { type RouterOutputs } from "~/utils/api";
 import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
-import { url } from "inspector";
-import menu from "~/pages/menu";
-import { getFieldTranslation } from "~/utils/hooks/useFieldTranslation";
+import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
 
 type MenuWithSections = RouterOutputs["menus"]["getAll"][number];
 
@@ -51,6 +49,7 @@ const SectionsList = ({
   menu: MenuWithSections;
   isLoading: boolean;
 }) => {
+  const { toLocale } = useFieldTranslation();
   const router = useRouter();
   const { classes } = useStyles();
 
@@ -71,7 +70,7 @@ const SectionsList = ({
               }
             >
               <Text align="center" transform="uppercase" color="white">
-                {getFieldTranslation(section, "name", router)}
+                {toLocale(section, "name")}
               </Text>
             </SectionItem>
           </div>

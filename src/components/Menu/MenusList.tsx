@@ -3,7 +3,8 @@ import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
 import { type Menu } from "@prisma/client";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { getFieldTranslation } from "~/utils/hooks/useFieldTranslation";
+import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
+import I18NButton from "./Navbar/I18NButton";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -37,6 +38,7 @@ const MenusList = ({
   menus: Menu[];
   isLoading: boolean;
 }) => {
+  const { toLocale } = useFieldTranslation();
   const router = useRouter();
   const { classes } = useStyles();
 
@@ -44,6 +46,7 @@ const MenusList = ({
 
   return (
     <div className={classes.container}>
+      <I18NButton style={{ position: "absolute", top: 32, right: 64 }} />
       {menus?.map((menu) => (
         <MenuItem
           key={menu.id}
@@ -54,7 +57,7 @@ const MenusList = ({
             })
           }
         >
-          {getFieldTranslation(menu, "name", router)}
+          {toLocale(menu, "name")}
         </MenuItem>
       ))}
     </div>

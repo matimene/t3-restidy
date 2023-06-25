@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
 import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
 import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
+import { t } from "i18next";
 
 const CartProduct = ({
   cartItem,
@@ -26,6 +27,7 @@ const CartProduct = ({
   cartItem: CartItem;
   item: Item;
 }) => {
+  const { toLocale, t } = useFieldTranslation();
   const { handleEditCart } = useCart(item.id);
   const [opened, { open, close }] = useDisclosure(false);
   const theme = useMantineTheme();
@@ -50,7 +52,7 @@ const CartProduct = ({
               onClick={open}
             />
           )}
-          <Text>{`${useFieldTranslation(item, "title")} (${item?.price.toFixed(
+          <Text>{`${toLocale(item, "title")} (${item?.price.toFixed(
             2
           )}€)`}</Text>
         </div>
@@ -62,7 +64,7 @@ const CartProduct = ({
       <TextInput
         mt={-6}
         mb={6}
-        placeholder="Notes"
+        placeholder={`${t("NOTES")}...`}
         value={cartItem?.notes}
         onChange={({ target }) => handleEditCart({ notes: target?.value })}
       />
@@ -116,6 +118,7 @@ const CartDrawer = ({
   opened: boolean;
   onClose: () => void;
 }) => {
+  const { t } = useFieldTranslation();
   const router = useRouter();
   const { cart, dispatch } = useStore();
   const { data: items, isLoading } = api.items.getByIds.useQuery({
@@ -157,7 +160,7 @@ const CartDrawer = ({
         <Drawer.Header>
           <Drawer.Title>
             <Text transform="uppercase" size={24} align="center">
-              My cart
+              {t("MY_CART")}
             </Text>
           </Drawer.Title>
           <Drawer.CloseButton />
@@ -185,7 +188,7 @@ const CartDrawer = ({
                 onClick={onClose}
                 style={{ textTransform: "uppercase" }}
               >
-                Add products to continue
+                {t("ADD_PRODUCTS_TO_CONTINUE")}
               </Button>
             </div>
           ) : (
@@ -224,7 +227,7 @@ const CartDrawer = ({
                   style={{ fontSize: 18 }}
                   onClick={handlePlaceOrder}
                 >
-                  Place order
+                  {t("PLACE_ORDER")}
                 </Button>
               </div>
             </>

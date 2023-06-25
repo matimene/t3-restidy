@@ -10,16 +10,20 @@ interface StoreDispatch {
   editCartItem: (cartItem: CartItem) => void;
   cleanCart: () => void;
   deleteCartItem: (id: number) => void;
+  setLang: (lang: string) => void;
 }
 
 interface StoreState {
   cart: CartItem[];
+  lang: string;
   dispatch: StoreDispatch;
 }
 
 const useStore = create<StoreState>()((set, get) => ({
+  lang: "en",
   cart: [],
   dispatch: {
+    setLang: (lang) => set({ lang }),
     editCartItem: (cartItem) => {
       const isInCart = get().cart.find(
         (item) => item.itemId === cartItem.itemId

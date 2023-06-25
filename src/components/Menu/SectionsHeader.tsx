@@ -3,20 +3,21 @@ import { useDisclosure } from "@mantine/hooks";
 import { type RouterOutputs } from "~/utils/api";
 import { ChevronDown, ChevronUp } from "tabler-icons-react";
 import { GradientDivider, Row } from "../Primary";
-import { useRouter } from "next/router";
-import { getFieldTranslation } from "~/utils/hooks/useFieldTranslation";
+import router from "next/router";
+import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
 
 type MenuWithSections = RouterOutputs["menus"]["getAll"][number];
 
 const SectionsHeader = ({ menu }: { menu: MenuWithSections }) => {
-  const router = useRouter();
+  const { toLocale } = useFieldTranslation();
   const [opened, { toggle }] = useDisclosure(false);
+  const { t } = useFieldTranslation();
 
   return (
     <Box w="100%" mx="auto">
       <Row mr={24} ml={24} justify="space-between" onClick={toggle}>
         <Text transform="uppercase" size={18} color="white">
-          Categories
+          {t("CATEGORIES")}
         </Text>
         {opened ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
       </Row>
@@ -43,7 +44,7 @@ const SectionsHeader = ({ menu }: { menu: MenuWithSections }) => {
               toggle();
             }}
           >
-            {getFieldTranslation(section, "name", router)}
+            {toLocale(section, "name")}
           </Text>
         ))}
       </Collapse>

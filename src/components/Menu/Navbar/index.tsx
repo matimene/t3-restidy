@@ -1,12 +1,13 @@
 import { Text, Box } from "@mantine/core";
-import { Atom2, World, ShoppingCart } from "tabler-icons-react";
+import { Atom2, ShoppingCart } from "tabler-icons-react";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { useDisclosure } from "@mantine/hooks";
 import useStore from "~/utils/zustand-store";
 import { Row } from "~/components/Primary";
 import CartDrawer from "./CartDrawer";
-import { useState } from "react";
+import I18NButton from "./I18NButton";
+import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
 
 const ItemContainer = styled.div`
   display: flex;
@@ -32,15 +33,10 @@ const Circle = styled.div`
 `;
 
 const MenuNavbar = () => {
+  const { t } = useFieldTranslation();
   const router = useRouter();
   const [opened, { open: openCart, close }] = useDisclosure(false);
   const { cart } = useStore();
-  const lang = (router.query.lang as string) ?? "en";
-
-  const handleChangeLang = () =>
-    void router.replace({
-      query: { ...router.query, lang: lang === "en" ? "es" : "en" },
-    });
 
   return (
     <>
@@ -55,13 +51,13 @@ const MenuNavbar = () => {
             onClick={() =>
               void router.push({
                 pathname: "/menu",
-                query: { token: router.query.token },
+                query: { ...router.query, token: router.query.token },
               })
             }
           >
             <Atom2 size={24} />
             <Text transform="uppercase" size={14}>
-              Menu
+              {t("MENU")}
             </Text>
           </ItemContainer>
           <Text
@@ -78,19 +74,11 @@ const MenuNavbar = () => {
             Boludo&apos;s Store
           </Text>
           <div style={{ display: "flex", gap: 24 }}>
-            <ItemContainer
-              style={{ justifyContent: "center" }}
-              onClick={handleChangeLang}
-            >
-              <Text>
-                {lang === "en" ? "ENG" : "SPA"}
-                <World size={12} style={{ marginLeft: 2 }} />
-              </Text>
-            </ItemContainer>
+            <I18NButton />
             <ItemContainer onClick={openCart}>
               <ShoppingCart size={24} />
               <Text transform="uppercase" size={14}>
-                Cart
+                {t("CART")}
               </Text>
               <Circle>{cart?.length}</Circle>
             </ItemContainer>

@@ -18,7 +18,6 @@ import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
 import { LoadingSpinner } from "~/components/Primary/LoadingSpinner";
 import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
-import { t } from "i18next";
 
 const CartProduct = ({
   cartItem,

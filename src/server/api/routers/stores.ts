@@ -1,13 +1,51 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 export const storesRouter = createTRPCRouter({
   getStore: publicProcedure.query(({ ctx }) => {
-    return { store: ctx.store };
+    if (!ctx.store)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Store not found",
+      });
+    return ctx.store;
   }),
 
+  getConfig: publicProcedure.query(async ({ ctx }) => {
+    const storeId = ctx.store?.id;
+
+    const config = await ctx.prisma.storeConfig.findFirst({
+      where: { storeId },
+    });
+    return config;
+  }),
+
+  editConfig: privateProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        bgImgs: z.string(),
+        defaultLang: z.string(),
+        logo: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.storeConfig.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          bgImgs: input.bgImgs,
+          logo: input.logo,
+          defaultLang: input.defaultLang,
+        },
+      });
+    }),
   loadDataByCode: publicProcedure.query(async ({ ctx }) => {
     const storeId = ctx.store?.id;
 
@@ -34,31 +72,4 @@ export const storesRouter = createTRPCRouter({
 
     return { menus, categories, store: ctx.store };
   }),
-
-  loadMenusAndCats: publicProcedure
-    .input(z.object({ code: z.string() }))
-    .query(async ({ ctx }) => {
-      const storeId = ctx.store?.id;
-      if (!storeId)
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Store not found",
-        });
-
-      const menus = await ctx.prisma.menu.findMany({
-        where: { storeId },
-      });
-
-      const categories = await ctx.prisma.category.findMany({
-        where: { storeId },
-      });
-
-      // if (!menus.length)
-      //   throw new TRPCError({
-      //     code: "INTERNAL_SERVER_ERROR",
-      //     message: "Menus not found",
-      //   });
-
-      return { menus, categories };
-    }),
 });

@@ -20,6 +20,9 @@ const DynamicMenus = dynamic(() => import("./Menus"), {
 const DynamicPhysicalTables = dynamic(() => import("./PhysicalTables"), {
   loading: () => <p>Loading...</p>,
 });
+const DynamicStoreConfig = dynamic(() => import("./StoreConfig"), {
+  loading: () => <p>Loading...</p>,
+});
 
 const TABS = {
   DASHBOARD: "dashboard",
@@ -31,6 +34,7 @@ const TABS = {
   MENUS: "menus",
   PRODUCTS: "products",
   ACCOUNT: "account",
+  STORE_CONFIG: "store config",
 };
 
 const Handler = ({ selectedValue }: { selectedValue: string | null }) => {
@@ -47,6 +51,8 @@ const Handler = ({ selectedValue }: { selectedValue: string | null }) => {
       return <DynamicMenus />;
     case TABS.PHYSICAL_TABLES:
       return <DynamicPhysicalTables />;
+    case TABS.STORE_CONFIG:
+      return <DynamicStoreConfig />;
     case TABS.ORDERS:
     default:
       return <DynamicOrders />;
@@ -88,6 +94,11 @@ function buildTabLinks(setActive: (tab: string) => void) {
           label: TABS.PRODUCTS,
           key: TABS.PRODUCTS,
           onClick: () => setActive(TABS.PRODUCTS),
+        },
+        {
+          label: TABS.STORE_CONFIG,
+          key: TABS.STORE_CONFIG,
+          onClick: () => setActive(TABS.STORE_CONFIG),
         },
       ],
     },

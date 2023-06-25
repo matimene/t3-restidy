@@ -8,6 +8,7 @@ import { Row } from "~/components/Primary";
 import CartDrawer from "./CartDrawer";
 import I18NButton from "./I18NButton";
 import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
+import { api } from "~/utils/api";
 
 const ItemContainer = styled.div`
   display: flex;
@@ -34,6 +35,7 @@ const Circle = styled.div`
 
 const MenuNavbar = () => {
   const { t } = useFieldTranslation();
+  const { data: store } = api.stores.getStore.useQuery();
   const router = useRouter();
   const [opened, { open: openCart, close }] = useDisclosure(false);
   const { cart } = useStore();
@@ -71,7 +73,7 @@ const MenuNavbar = () => {
               transform: "translate(-50%, -50%)",
             }}
           >
-            Boludo&apos;s Store
+            {store?.name}
           </Text>
           <div style={{ display: "flex", gap: 24 }}>
             <I18NButton />

@@ -59,8 +59,8 @@ model Item {
   price         Float       @db.Float
   img           String?     @db.VarChar(255)
   categoryCodes String?     @db.VarChar(255)
-  descriptionEn String?     @db.VarChar(255)
-  descriptionEs String?     @db.VarChar(255)
+  descriptionEn String?     @db.VarChar(750)
+  descriptionEs String?     @db.VarChar(750)
   tagsEn        String?     @db.VarChar(255)
   tagsEs        String?     @db.VarChar(255)
   titleEn       String?     @db.VarChar(255)
@@ -136,10 +136,11 @@ model PhysicalTable {
 }
 
 model Store {
-  id     Int     @id @default(autoincrement())
-  name   String? @db.VarChar(255)
-  code   String  @unique @db.VarChar(50)
-  active Boolean @default(true)
+  id          Int           @id @default(autoincrement())
+  name        String?       @db.VarChar(255)
+  code        String        @unique @db.VarChar(50)
+  active      Boolean       @default(true)
+  StoreConfig StoreConfig[]
 
   @@index([code])
 }
@@ -151,6 +152,7 @@ model StoreConfig {
   logo         String @db.VarChar(500)
   bgImgs       String @db.VarChar(500)
   customColors String @db.VarChar(750)
+  store        Store  @relation(fields: [storeId], references: [id])
 
   @@index([storeId])
 }

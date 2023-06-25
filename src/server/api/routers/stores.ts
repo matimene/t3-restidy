@@ -29,9 +29,9 @@ export const storesRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.number(),
-        bgImgs: z.string(),
+        imgs: z.array(z.string()),
         defaultLang: z.string(),
-        logo: z.string(),
+        logo: z.string().nullish(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -40,8 +40,8 @@ export const storesRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
-          bgImgs: input.bgImgs,
-          logo: input.logo,
+          bgImgs: input.imgs.join(";"),
+          logo: input.logo ?? "",
           defaultLang: input.defaultLang,
         },
       });

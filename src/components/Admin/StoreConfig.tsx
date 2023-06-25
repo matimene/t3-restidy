@@ -1,4 +1,11 @@
-import { createStyles, rem, Paper, Text, TextInput } from "@mantine/core";
+import {
+  createStyles,
+  rem,
+  Paper,
+  Text,
+  TextInput,
+  Button,
+} from "@mantine/core";
 import { api } from "~/utils/api";
 import { useEffect, useState } from "react";
 import { Row } from "~/components/Primary";
@@ -6,6 +13,7 @@ import { LoadingSpinner } from "../Primary/LoadingSpinner";
 import BooleanChip from "../Primary/BooleanChip";
 import useIntervalPicker from "~/utils/hooks/useIntervalPicker";
 import { type StoreConfig } from "@prisma/client";
+import toast from "react-hot-toast";
 
 const useStyles = createStyles((theme, { bgUrl }: { bgUrl?: string }) => ({
   container: {
@@ -31,6 +39,7 @@ const useStyles = createStyles((theme, { bgUrl }: { bgUrl?: string }) => ({
 type StoreConfigProps = StoreConfig & { imgs: string[] };
 
 const StoreConfigPage = () => {
+  const ctx = api.useContext();
   const { data: storeConfig, isLoading } = api.stores.getConfig.useQuery();
   const [newBody, setNewBody] = useState<StoreConfigProps>();
   const bgImage = useIntervalPicker(
@@ -38,6 +47,18 @@ const StoreConfigPage = () => {
     5000
   );
   const { classes } = useStyles({ bgUrl: bgImage });
+
+  const { mutate: edit, isLoading: isEditing } =
+    api.stores.editConfig.useMutation({
+      onSuccess: () => {
+        void ctx.stores.getConfig.invalidate();
+        toast.success("Store config updated");
+      },
+      onError: (e) => {
+        const errorMessage = e.data?.zodError;
+        window.alert(errorMessage);
+      },
+    });
 
   const handleEditField = (key: string, value: any) =>
     setNewBody((curr) => {
@@ -53,6 +74,15 @@ const StoreConfigPage = () => {
         return { ...curr, imgs: newImgs };
       }
     });
+  const handleSubmit = () => {
+    storeConfig &&
+      edit({
+        id: storeConfig.id,
+        imgs: newBody?.imgs ?? [],
+        defaultLang: newBody?.defaultLang ?? "en",
+        logo: newBody?.logo,
+      });
+  };
 
   useEffect(() => {
     storeConfig &&
@@ -120,7 +150,7 @@ const StoreConfigPage = () => {
           <div>
             <Text size={14}>Default lang:</Text>
             <BooleanChip
-              value={storeConfig?.defaultLang === "en"}
+              value={newBody?.defaultLang === "en"}
               falseLabel="Español"
               trueLabel="English"
               onChange={(value) =>
@@ -128,6 +158,9 @@ const StoreConfigPage = () => {
               }
             />
           </div>
+          <Button onClick={handleSubmit} disabled={isEditing || isLoading}>
+            Save changes
+          </Button>
         </Paper>
       </div>
     </>

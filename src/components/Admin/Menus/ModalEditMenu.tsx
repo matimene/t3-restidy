@@ -1,4 +1,10 @@
-import { TextInput, LoadingOverlay, Modal, Button } from "@mantine/core";
+import {
+  TextInput,
+  LoadingOverlay,
+  Modal,
+  Button,
+  ScrollArea,
+} from "@mantine/core";
 import { useEffect, useState } from "react";
 import { type RouterOutputs, api } from "~/utils/api";
 import { Row } from "~/components/Primary";
@@ -54,6 +60,7 @@ const ModalEditMenu = ({
       opened={isOpen}
       onClose={onClose}
       title="Edit menu"
+      scrollAreaComponent={ScrollArea.Autosize}
       centered
     >
       <LoadingOverlay

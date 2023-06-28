@@ -1,4 +1,4 @@
-import { LoadingOverlay, Modal } from "@mantine/core";
+import { LoadingOverlay, Modal, ScrollArea } from "@mantine/core";
 import { api } from "~/utils/api";
 import { type Item } from "@prisma/client";
 import ProductForm from "./ProductForm";
@@ -22,6 +22,7 @@ const ModalEditProduct = ({
     api.items.edit.useMutation({
       onSuccess: () => {
         void ctx.items.getAll.invalidate();
+        void ctx.items.getOne.invalidate();
         onClose();
       },
       onError: (e) => {
@@ -38,7 +39,7 @@ const ModalEditProduct = ({
       opened={isOpen}
       onClose={onClose}
       title="Edit product"
-      centered
+      scrollAreaComponent={ScrollArea.Autosize}
     >
       <LoadingOverlay
         visible={isLoadingProduct || isLoadingMutation}

@@ -20,5 +20,8 @@ const config = {
     localeDetection: false,
   },
   trailingSlash: true,
+  experimental: {
+    esmExternals: false, // Uploadthing will not work with this enabled.
+  },
 };
 export default config;

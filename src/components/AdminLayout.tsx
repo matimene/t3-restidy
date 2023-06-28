@@ -2,7 +2,7 @@ import type { PropsWithChildren } from "react";
 import { createStyles, rem } from "@mantine/core";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import useIntervalPicker from "~/utils/hooks/useIntervalPicker";
-
+import "@uploadthing/react/styles.css";
 interface LayoutProps {
   bgUrl: string;
 }

@@ -5,6 +5,7 @@ import {
   Text,
   MultiSelect,
   TextInput,
+  ScrollArea,
 } from "@mantine/core";
 import { useState } from "react";
 import { type RouterOutputs, api } from "~/utils/api";
@@ -143,7 +144,7 @@ const Section = ({
         placeholder="Pick products"
         value={itemIds}
         onChange={(ids) => handleEditField("itemIds", ids.join(";"))}
-        styles={{ dropdown: { marginBottom: 12 } }}
+        styles={{ dropdown: { marginBottom: 12, overflow: "visible" } }}
       />
     </div>
   );
@@ -227,6 +228,7 @@ const ModalEditSections = ({
       onClose={onClose}
       title={`'${menu?.nameEn || "Menu"}' sections`}
       centered
+      scrollAreaComponent={ScrollArea.Autosize}
       styles={{ content: { overflow: "visible" } }}
     >
       <LoadingOverlay

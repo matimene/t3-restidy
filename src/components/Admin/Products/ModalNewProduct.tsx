@@ -1,4 +1,4 @@
-import { LoadingOverlay, Modal } from "@mantine/core";
+import { LoadingOverlay, Modal, ScrollArea } from "@mantine/core";
 import { api } from "~/utils/api";
 import { type Item } from "@prisma/client";
 import ProductForm from "./ProductForm";
@@ -32,6 +32,7 @@ const ModalNewProduct = ({
       onClose={onClose}
       title="New product"
       centered
+      scrollAreaComponent={ScrollArea.Autosize}
     >
       <LoadingOverlay
         visible={isLoading}

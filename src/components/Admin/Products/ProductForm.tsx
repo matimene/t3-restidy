@@ -1,7 +1,10 @@
-import { TextInput, Button, Textarea } from "@mantine/core";
+import { TextInput, Button, Textarea, Flex, Image } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { type Item } from "@prisma/client";
 import { Row } from "~/components/Primary";
+import { UploadDropzone } from "~/utils/uploadthing";
+import { api } from "~/utils/api";
+import { toast } from "react-hot-toast";
 
 type NewItem = Omit<Item, "id">;
 type GenericObject = Record<string, string | number>;
@@ -17,6 +20,7 @@ const ProductForm = ({
   submitLabel: string;
   defaultValues?: Item;
 }) => {
+  const { data: store } = api.stores.getStore.useQuery();
   const [newBody, setNewBody] = useState<
     Item | NewItem | GenericObject | undefined
   >(defaultValues);
@@ -31,20 +35,62 @@ const ProductForm = ({
     setNewBody(defaultValues);
   }, [defaultValues]);
 
+  if (!store) return null;
+
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+      }}
+    >
       <TextInput
         label="SKU"
         maxLength={190}
         value={newBody?.sku || ""}
         onChange={({ target }) => handleEditField("sku", target?.value)}
       />
-      <TextInput
-        label="Image URL"
-        maxLength={255}
-        value={newBody?.img || ""}
-        onChange={({ target }) => handleEditField("img", target?.value)}
-      />
+      <div>
+        <TextInput
+          label="Image URL"
+          maxLength={255}
+          value={newBody?.img || ""}
+          onChange={({ target }) => handleEditField("img", target?.value)}
+        />
+        <Row align="center" justify="space-around" marginTop={12}>
+          <div>
+            {newBody?.img ? (
+              <Image
+                src={newBody.img as string}
+                alt="product-image"
+                height={200}
+              />
+            ) : (
+              <Flex
+                align="center"
+                justify="center"
+                h={200}
+                w={200}
+                style={{ backgroundColor: "#FFFFFFCC", color: "#000000" }}
+                styles={{ root: { h: 200 } }}
+              >
+                No image
+              </Flex>
+            )}
+          </div>
+          <UploadDropzone
+            endpoint="products"
+            onClientUploadComplete={(res) => {
+              handleEditField("img", res?.[0]?.fileUrl);
+            }}
+            onUploadError={(error: Error) => {
+              console.error(error.message);
+              toast.error(`ERROR Uploading!`);
+            }}
+          />
+        </Row>
+      </div>
       <TextInput
         label="Title (ENG)"
         maxLength={255}
@@ -98,7 +144,7 @@ const ProductForm = ({
           {submitLabel}
         </Button>
       </Row>
-    </>
+    </div>
   );
 };
 

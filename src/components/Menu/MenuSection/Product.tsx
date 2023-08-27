@@ -24,17 +24,13 @@ const useStyles = createStyles((theme) => ({
     paddingBottom: theme.spacing.xs,
     paddingTop: theme.spacing.xs,
     width: "100%",
-    height: "100%",
     minWidth: rem(350),
-
-    // Simplify media query writing with theme functions
-    [theme.fn.smallerThan("md")]: {
-      height: "min-content",
-    },
+    height: "min-content",
   },
   imgWrapper: {
     width: rem(120),
     marginRight: theme.spacing.xs,
+    cursor: "pointer",
   },
 }));
 

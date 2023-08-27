@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
 import I18NButton from "./Navbar/I18NButton";
+import { api } from "~/utils/api";
+import { Text } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -41,12 +43,27 @@ const MenusList = ({
   const { toLocale } = useFieldTranslation();
   const router = useRouter();
   const { classes } = useStyles();
+  const { data: store } = api.stores.getStore.useQuery();
 
   if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className={classes.container}>
-      <I18NButton style={{ position: "absolute", top: 32, right: 64 }} />
+      <Text
+        color="white"
+        transform="uppercase"
+        size={18}
+        style={{
+          position: "absolute",
+          textAlign: "center",
+          top: 32,
+          left: 0,
+          width: "100%",
+        }}
+      >
+        {store?.name}
+      </Text>
+      <I18NButton style={{ position: "absolute", top: 32, right: 24 }} />
       {menus?.map((menu) => (
         <MenuItem
           key={menu.id}

@@ -40,6 +40,11 @@ const SectionItem = styled.div<{ img?: string | null }>`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+
+  @media only screen and (min-width: 1080px) {
+    height: 20vw;
+    width: 20vw;
+  }
 `;
 
 const SectionsList = ({

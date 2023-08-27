@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp } from "tabler-icons-react";
 import { GradientDivider, Row } from "../Primary";
 import router from "next/router";
 import useFieldTranslation from "~/utils/hooks/useFieldTranslation";
+import Link from "next/link";
 
 type MenuWithSections = RouterOutputs["menus"]["getAll"][number];
 
@@ -15,7 +16,13 @@ const SectionsHeader = ({ menu }: { menu: MenuWithSections }) => {
 
   return (
     <Box w="100%" mx="auto">
-      <Row mr={24} ml={24} justify="space-between" onClick={toggle}>
+      <Row
+        mr={24}
+        ml={24}
+        justify="space-between"
+        onClick={toggle}
+        style={{ cursor: "pointer" }}
+      >
         <Text transform="uppercase" size={18} color="white">
           {t("CATEGORIES")}
         </Text>
@@ -36,6 +43,7 @@ const SectionsHeader = ({ menu }: { menu: MenuWithSections }) => {
             key={section.id}
             my={12}
             color="white"
+            style={{ cursor: "pointer" }}
             onClick={() => {
               void router.push({
                 pathname: `/menu/${menu.slug}/${section.slug}`,

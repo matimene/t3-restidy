@@ -19,7 +19,7 @@ export const itemsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const storeId = ctx.store?.id;
       const items = await ctx.prisma.item.findMany({
-        take: 18,
+        // take: 18,
         skip: input?.skip,
         orderBy: {
           [input?.sortBy]: "asc",
@@ -44,7 +44,7 @@ export const itemsRouter = createTRPCRouter({
       const productIds = ids.split(";").map((id) => parseInt(id));
 
       const items = await ctx.prisma.item.findMany({
-        take: 18,
+        // take: 18,
         skip: skip,
         orderBy: {
           [sortBy]: "asc",
